@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
-import java.util.Set;
 
 
 import static org.assertj.core.api.Assertions.assertThat;

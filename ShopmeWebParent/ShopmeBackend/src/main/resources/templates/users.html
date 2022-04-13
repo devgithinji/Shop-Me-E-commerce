@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout(~{::title},~{::section})">
+<head>
+    <title>ShopMe Admin Control Panel</title>
+</head>
+<body>
+<section>
+    <div>
+        <h2 class="text-primary">Manage Users</h2>
+    </div>
+    <div>
+        <table class="table table-bordered table-striped table-hover table-responsive-xl">
+            <thead class="thead-dark">
+            <tr>
+                <th>User ID</th>
+                <th>Photos</th>
+                <th>Email</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Roles</th>
+                <th>Enabled</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user: ${users}">
+                <td th:text="${user.id}"></td>
+                <td>
+
+                </td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.firstName}"></td>
+                <td th:text="${user.lastName}"></td>
+                <td>
+                    <p th:each="role : ${user.getRoles()}" th:text="${role.name}"></p>
+                </td>
+                <td th:text="${user.isEnabled()}"></td>
+                <td>
+                    Edit &nbsp; Delete
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</body>
+</html>
