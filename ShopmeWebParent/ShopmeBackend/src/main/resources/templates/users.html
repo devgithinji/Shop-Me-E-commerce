@@ -7,7 +7,7 @@
 <section>
     <div>
         <h2 class="text-primary">Manage Users</h2>
-        <a  th:href="@{/users/new}">Create New</a>
+        <a th:href="@{/users/new}">Create New</a>
     </div>
     <div th:if="${message != null}" class="alert alert-success text-center">
         [[${message}]]
@@ -30,7 +30,7 @@
             <tr th:each="user: ${users}">
                 <td th:text="${user.id}"></td>
                 <td>
-
+                    <span class="fas fa-portrait fa-2x icon-silver"></span>
                 </td>
                 <td th:text="${user.email}"></td>
                 <td th:text="${user.firstName}"></td>
@@ -38,9 +38,14 @@
                 <td>
                     <p th:each="role : ${user.getRoles()}" th:text="${role.name}"></p>
                 </td>
-                <td th:text="${user.isEnabled()}"></td>
                 <td>
-                    Edit &nbsp; Delete
+                    <a th:if="${user.isEnabled()}" class="fas fa-check-circle fa-2x icon-green" href=""></a>
+                    <a th:unless="${user.isEnabled()}" class="fas fa-check-circle fa-2x icon-dark" href=""></a>
+                </td>
+                <td>
+                    <a class="fa fa-edit fa-2x icon-green" href=""></a>
+                    &nbsp;
+                    <a class="fa fa-trash fa-2x text-danger" href=""></a>
                 </td>
             </tr>
             </tbody>
