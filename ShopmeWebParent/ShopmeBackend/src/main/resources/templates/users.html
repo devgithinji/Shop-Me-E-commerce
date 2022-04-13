@@ -7,6 +7,10 @@
 <section>
     <div>
         <h2 class="text-primary">Manage Users</h2>
+        <a  th:href="@{/users/new}">Create New</a>
+    </div>
+    <div th:if="${message != null}" class="alert alert-success text-center">
+        [[${message}]]
     </div>
     <div>
         <table class="table table-bordered table-striped table-hover table-responsive-xl">
