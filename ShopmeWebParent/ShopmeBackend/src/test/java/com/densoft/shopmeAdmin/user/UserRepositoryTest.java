@@ -84,4 +84,10 @@ class UserRepositoryTest {
         assertThat(userRepository.findById(3).isEmpty()).isEqualTo(true);
     }
 
+    @Test
+    public void testGetUserByEmail(){
+        String email  = "abc@fgmail.com";
+        assertThat(userRepository.findByEmail(email).isEmpty()).isTrue();
+    }
+
 }
