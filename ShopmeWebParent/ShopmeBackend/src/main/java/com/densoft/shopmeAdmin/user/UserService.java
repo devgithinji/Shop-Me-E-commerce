@@ -74,4 +74,14 @@ public class UserService {
             throw new UserNotFoundException("Could not find any user with ID " + id);
         }
     }
+
+    public void delete(Integer id) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isPresent()) {
+            userRepository.deleteById(id);
+        } else {
+            throw new UserNotFoundException("Could not find any user with ID " + id);
+        }
+    }
 }
