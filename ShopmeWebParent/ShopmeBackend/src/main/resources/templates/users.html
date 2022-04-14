@@ -39,8 +39,10 @@
                     <p th:each="role : ${user.getRoles()}" th:text="${role.name}"></p>
                 </td>
                 <td>
-                    <a th:if="${user.isEnabled()}" class="fas fa-check-circle fa-2x icon-green" href=""></a>
-                    <a th:unless="${user.isEnabled()}" class="fas fa-check-circle fa-2x icon-dark" href=""></a>
+                    <a th:if="${user.isEnabled()}" class="fas fa-check-circle fa-2x icon-green text-decoration-none"
+                       th:href="@{'/users/'+${user.id}+'/enabled/false'}" title="Disable this user"></a>
+                    <a th:unless="${user.isEnabled()}" class="fas fa-check-circle fa-2x icon-dark text-decoration-none"
+                       th:href="@{'/users/'+${user.id}+'/enabled/true'}" title="Enable this user"></a>
                 </td>
                 <td>
                     <a class="fa fa-edit fa-2x icon-green" th:href="@{'/users/edit/'+${user.id}}"

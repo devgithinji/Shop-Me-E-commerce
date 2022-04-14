@@ -97,4 +97,14 @@ class UserRepositoryTest {
         assertThat(countById).isNotNull().isGreaterThan(0);
     }
 
+    @Test
+    public void testDisabledUser() {
+        int id = 1;
+        User user = userRepository.findById(id).get();
+        user.setEnabled(false);
+
+        User savedUser = userRepository.save(user);
+        assertThat(savedUser.isEnabled()).isFalse();
+    }
+
 }

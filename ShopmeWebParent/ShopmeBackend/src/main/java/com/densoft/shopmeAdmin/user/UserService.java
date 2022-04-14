@@ -84,4 +84,16 @@ public class UserService {
             throw new UserNotFoundException("Could not find any user with ID " + id);
         }
     }
+
+    public void updateUserEnabledStatus(Integer id, boolean enabled) throws UserNotFoundException {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setEnabled(enabled);
+            userRepository.save(user);
+        } else {
+            throw new UserNotFoundException("Could not find any user with ID " + id);
+        }
+    }
 }
