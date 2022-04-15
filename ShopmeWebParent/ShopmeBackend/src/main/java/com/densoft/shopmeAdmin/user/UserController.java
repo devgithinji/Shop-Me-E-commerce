@@ -1,15 +1,21 @@
 package com.densoft.shopmeAdmin.user;
 
+import com.densoft.shopmeAdmin.util.FileUpload;
 import com.densoft.shopmecommon.entity.Role;
 import com.densoft.shopmecommon.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -21,9 +27,24 @@ public class UserController {
 
     @GetMapping("/users")
     public String getUsers(Model model) {
-        List<User> userList = userService.listAll();
-        model.addAttribute("users", userList);
-        model.addAttribute("pageTitle", "Users List");
+        return listByPage(1, model);
+    }
+
+    @GetMapping("/users/page/{pageNum}")
+    public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model) {
+        Page<User> page = userService.listByPage(pageNum);
+        List<User> users = page.getContent();
+        long startCount = (long) (pageNum - 1) * UserService.USERS_PER_PAGE + 1;
+        long endCount = startCount + UserService.USERS_PER_PAGE - 1;
+        if (endCount > page.getTotalElements()) {
+            endCount = page.getTotalPages();
+        }
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("startCount", startCount);
+        model.addAttribute("endCount", endCount);
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("users", users);
         return "users";
     }
 
@@ -39,8 +60,19 @@ public class UserController {
     }
 
     @PostMapping("/users/save")
-    public String saveUser(User user, RedirectAttributes redirectAttributes) {
-        userService.save(user);
+    public String saveUser(User user, RedirectAttributes redirectAttributes, @RequestParam("image") MultipartFile multipartFile) throws IOException {
+        if (!multipartFile.isEmpty()) {
+            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            user.setPhotos(fileName);
+            User savedUser = userService.save(user);
+            String uploadDir = "user-photos/" + savedUser.getId();
+            FileUpload.cleanDir(uploadDir);
+            FileUpload.saveFile(uploadDir, fileName, multipartFile);
+        } else {
+            if (user.getPhotos().isEmpty()) user.setPhotos(null);
+            userService.save(user);
+        }
+
         redirectAttributes.addFlashAttribute("message", "User saved successfully");
         return "redirect:/users";
     }
@@ -53,6 +85,7 @@ public class UserController {
             model.addAttribute("pageTitle", "Edit User (ID: " + id + ")");
             List<Role> roles = userService.listRoles();
             model.addAttribute("roles", roles);
+
             return "user_form";
         } catch (UserNotFoundException e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
@@ -80,7 +113,6 @@ public class UserController {
         } catch (UserNotFoundException e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
         }
-
         return "redirect:/users";
     }
 }

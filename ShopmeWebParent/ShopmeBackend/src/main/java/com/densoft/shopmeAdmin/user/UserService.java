@@ -3,6 +3,9 @@ package com.densoft.shopmeAdmin.user;
 import com.densoft.shopmecommon.entity.Role;
 import com.densoft.shopmecommon.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,8 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+
+    public static final int USERS_PER_PAGE = 4;
 
     @Autowired
     private UserRepository userRepository;
@@ -27,11 +32,16 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public Page<User> listByPage(int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum - 1, USERS_PER_PAGE);
+        return userRepository.findAll(pageable);
+    }
+
     public List<Role> listRoles() {
         return roleRepository.findAll();
     }
 
-    public void save(User user) {
+    public User save(User user) {
         boolean isUpdatingUser = (user.getId() != null);
         if (isUpdatingUser) {
             User existingUser = userRepository.findById(user.getId()).get();
@@ -44,6 +54,7 @@ public class UserService {
             encodePassword(user);
         }
         userRepository.save(user);
+        return user;
     }
 
     private void encodePassword(User user) {
