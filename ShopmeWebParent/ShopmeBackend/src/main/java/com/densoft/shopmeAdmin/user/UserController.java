@@ -5,6 +5,7 @@ import com.densoft.shopmecommon.entity.Role;
 import com.densoft.shopmecommon.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -27,24 +28,30 @@ public class UserController {
 
     @GetMapping("/users")
     public String getUsers(Model model) {
-        return listByPage(1, model);
+        return listByPage(1, model, "firstName", "asc");
     }
 
     @GetMapping("/users/page/{pageNum}")
-    public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model) {
-        Page<User> page = userService.listByPage(pageNum);
+    public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model, @RequestParam(value = "sortField", defaultValue = "firstName") String sortField, @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir) {
+        Page<User> page = userService.listByPage(pageNum, sortField, sortDir);
         List<User> users = page.getContent();
         long startCount = (long) (pageNum - 1) * UserService.USERS_PER_PAGE + 1;
         long endCount = startCount + UserService.USERS_PER_PAGE - 1;
         if (endCount > page.getTotalElements()) {
             endCount = page.getTotalPages();
         }
+
+        String reverseSortDir = sortDir.equalsIgnoreCase("asc") ? "desc" : "asc";
+
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("startCount", startCount);
         model.addAttribute("endCount", endCount);
         model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
         model.addAttribute("users", users);
+        model.addAttribute("reverseSortDir", reverseSortDir);
         return "users";
     }
 
