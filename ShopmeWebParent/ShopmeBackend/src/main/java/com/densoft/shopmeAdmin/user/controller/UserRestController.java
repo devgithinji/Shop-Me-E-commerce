@@ -1,5 +1,6 @@
-package com.densoft.shopmeAdmin.user;
+package com.densoft.shopmeAdmin.user.controller;
 
+import com.densoft.shopmeAdmin.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

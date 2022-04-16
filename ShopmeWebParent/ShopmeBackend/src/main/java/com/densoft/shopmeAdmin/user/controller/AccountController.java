@@ -1,6 +1,8 @@
-package com.densoft.shopmeAdmin.user;
+package com.densoft.shopmeAdmin.user.controller;
 
 import com.densoft.shopmeAdmin.security.CustomUserDetails;
+import com.densoft.shopmeAdmin.user.exception.UserNotFoundException;
+import com.densoft.shopmeAdmin.user.UserService;
 import com.densoft.shopmeAdmin.util.FileUpload;
 import com.densoft.shopmecommon.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,7 @@ public class AccountController {
         String email = customUserDetails.getUsername();
         User user = userService.getByEmail(email);
         model.addAttribute("user", user);
-        return "account_form";
+        return "users/account_form";
     }
 
     @PostMapping("/account/update")
