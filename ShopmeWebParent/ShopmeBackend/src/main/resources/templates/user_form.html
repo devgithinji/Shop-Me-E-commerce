@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout(~{::title},~{::section})">
-<head>
-    <title>[[${pageTitle}]]</title>
-</head>
-<body>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::page_head('User Manage - ShopMe Admin')"></head>
+<body class="container-fluid">
+<div th:replace="navigation::menu"></div>
 <section>
-    <div>
+    <div class="my-2">
         <h2 class="text-primary">Manage Users | [[${pageTitle}]]</h2>
     </div>
     <div>
@@ -151,5 +150,6 @@
         }
     </script>
 </section>
+<div th:replace="fragments::footer"></div>
 </body>
 </html>

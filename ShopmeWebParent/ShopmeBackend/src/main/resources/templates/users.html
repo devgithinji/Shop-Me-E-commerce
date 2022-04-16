@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout(~{::title},~{::section})">
-<head>
-    <title>Users List</title>
-</head>
-<body>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::page_head('Users - ShopMe Admin')"></head>
+<body class="container-fluid">
+<div th:replace="navigation::menu"></div>
 <section>
-    <div>
+    <div class="my-2">
         <h2 class="text-primary">Manage Users</h2>
         <a th:href="@{/users/new}" class="fas fa-user-plus fa-2x icon-dark mr-2"></a>
         <a th:href="@{/users/export/csv}" class="fas fa-file-csv fa-2x icon-dark mr-2"></a>
@@ -151,6 +150,7 @@
             </div>
         </div>
     </div>
+    <div th:replace="fragments::footer"></div>
     <script type="text/javascript">
         $(document).ready(function () {
             $(".link-delete").on("click", function (e) {

@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout(~{::title},~{::section})">
-<head>
-    <title>ShopMe Admin Control Panel</title>
-</head>
-<body>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments:: page_head('Home - ShopMe Admin')"></head>
+<body class="container-fluid">
 <section>
-    <div>
-        <h1 class="text-primary">Welcome to ShopMe Admin Control Panel</h1>
-    </div>
+    <div th:replace="navigation::menu"></div>
+    <div class="my-2"><h2 class="text-primary">ShopMe Admin Panel</h2></div>
+    <div th:replace="fragments::footer"></div>
 </section>
 </body>
 </html>
