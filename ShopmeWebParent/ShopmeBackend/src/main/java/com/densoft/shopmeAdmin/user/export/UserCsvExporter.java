@@ -1,5 +1,6 @@
-package com.densoft.shopmeAdmin.user;
+package com.densoft.shopmeAdmin.user.export;
 
+import com.densoft.shopmeAdmin.user.export.AbstractExporter;
 import com.densoft.shopmecommon.entity.User;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;

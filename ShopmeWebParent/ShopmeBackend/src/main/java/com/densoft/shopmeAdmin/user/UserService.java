@@ -29,6 +29,15 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    public User getByEmail(String email) throws UserNotFoundException {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            return optionalUser.get();
+        }
+
+        throw new UserNotFoundException("User not found");
+    }
+
     public List<User> listAll() {
         return userRepository.findAll(Sort.by("firstName").ascending());
     }
@@ -63,6 +72,24 @@ public class UserService {
         }
         userRepository.save(user);
         return user;
+    }
+
+    public User updateAccount(User userInForm) {
+        User userInDb = userRepository.findById(userInForm.getId()).get();
+
+        if (!userInForm.getPassword().isEmpty()) {
+            userInDb.setPassword(userInForm.getPassword());
+            encodePassword(userInDb);
+        }
+
+        if (userInForm.getPhotos() != null) {
+            userInDb.setPhotos(userInForm.getPhotos());
+        }
+
+        userInDb.setFirstName(userInForm.getFirstName());
+        userInDb.setLastName(userInForm.getLastName());
+
+        return userRepository.save(userInDb);
     }
 
     private void encodePassword(User user) {
