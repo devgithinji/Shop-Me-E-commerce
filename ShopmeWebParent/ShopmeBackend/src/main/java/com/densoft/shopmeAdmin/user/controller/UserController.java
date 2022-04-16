@@ -1,5 +1,7 @@
-package com.densoft.shopmeAdmin.user;
+package com.densoft.shopmeAdmin.user.controller;
 
+import com.densoft.shopmeAdmin.user.exception.UserNotFoundException;
+import com.densoft.shopmeAdmin.user.UserService;
 import com.densoft.shopmeAdmin.user.export.UserCsvExporter;
 import com.densoft.shopmeAdmin.user.export.UserExcelExporter;
 import com.densoft.shopmeAdmin.user.export.UserPdfExporter;
@@ -62,7 +64,7 @@ public class UserController {
         model.addAttribute("users", users);
         model.addAttribute("reverseSortDir", reverseSortDir);
         model.addAttribute("keyWord", keyWord);
-        return "users";
+        return "users/users";
     }
 
     @GetMapping("/users/new")
@@ -73,7 +75,7 @@ public class UserController {
         model.addAttribute("user", user);
         model.addAttribute("roles", roles);
         model.addAttribute("pageTitle", "Create New User");
-        return "user_form";
+        return "users/user_form";
     }
 
     @PostMapping("/users/save")
@@ -110,7 +112,7 @@ public class UserController {
             List<Role> roles = userService.listRoles();
             model.addAttribute("roles", roles);
 
-            return "user_form";
+            return "users/user_form";
         } catch (UserNotFoundException e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
             return "redirect:/users";

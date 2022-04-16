@@ -1,5 +1,6 @@
 package com.densoft.shopmeAdmin.user;
 
+import com.densoft.shopmeAdmin.user.exception.UserNotFoundException;
 import com.densoft.shopmecommon.entity.Role;
 import com.densoft.shopmecommon.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
