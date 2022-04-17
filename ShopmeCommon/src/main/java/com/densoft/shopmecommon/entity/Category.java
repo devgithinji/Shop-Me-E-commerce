@@ -47,6 +47,23 @@ public class Category {
         return newCategory;
     }
 
+    public static Category copyFull(Category category) {
+        Category categoryCopy = new Category();
+        categoryCopy.setId(category.getId());
+        categoryCopy.setName(category.getName());
+        categoryCopy.setImage(category.getImage());
+        categoryCopy.setAlias(category.getAlias());
+        categoryCopy.setEnabled(category.isEnabled());
+        //categoryCopy.setParent(category.parent);
+        return categoryCopy;
+    }
+
+    public static Category copyFull(Category category, String name) {
+        Category copyCategory = Category.copyFull(category);
+        copyCategory.setName(name);
+        return copyCategory;
+    }
+
     public Category(String name) {
         this.name = name;
         this.alias = name;
@@ -64,4 +81,9 @@ public class Category {
 
     @OneToMany(mappedBy = "parent")
     private Set<Category> children = new HashSet<>();
+
+    @Transient
+    public String getImagePath() {
+        return "/category-images/" + this.id + "/" + this.image;
+    }
 }
