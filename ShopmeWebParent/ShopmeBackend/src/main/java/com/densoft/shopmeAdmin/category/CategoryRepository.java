@@ -18,6 +18,9 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     @Query("select c from Category c where c.parent.id is NULL")
     Page<Category> findRootCategories(Pageable pageable);
 
+    @Query("select c from Category c where c.name like %?1%")
+    Page<Category> search(String keyWord, Pageable pageable);
+
 
     Category findByName(String name);
 

@@ -18,7 +18,7 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<Category> listByPage(CategoryPageInfo categoryPageInfo, int pageNumber, String sortDir) {
+    public List<Category> listByPage(CategoryPageInfo categoryPageInfo, int pageNumber, String sortDir, String keyWord) {
         Sort sort = Sort.by("name");
 
         if (sortDir.equals("asc")) {
@@ -28,14 +28,31 @@ public class CategoryService {
         }
 
         Pageable pageable = PageRequest.of(pageNumber - 1, ROOT_CATEGORIES_PER_PAGE, sort);
-        Page<Category> pageCategories = categoryRepository.findRootCategories(pageable);
+
+        Page<Category> pageCategories;
+
+        if (keyWord != null && !keyWord.isEmpty()) {
+            pageCategories = categoryRepository.search(keyWord, pageable);
+        } else {
+            pageCategories = categoryRepository.findRootCategories(pageable);
+        }
+
+
         List<Category> rootCategories = pageCategories.getContent();
 
         categoryPageInfo.setTotalElements(pageCategories.getTotalElements());
         categoryPageInfo.setTotalPages(pageCategories.getTotalPages());
 
+        if (keyWord != null && !keyWord.isEmpty()) {
+            List<Category> searchResult = pageCategories.getContent();
+            for (Category category : searchResult) {
+                category.setHasChildren(category.getChildren().size() > 0);
+            }
 
-        return listHierarchicalCategories(rootCategories, sortDir);
+            return searchResult;
+        } else {
+            return listHierarchicalCategories(rootCategories, sortDir);
+        }
     }
 
     private List<Category> listHierarchicalCategories(List<Category> rootCategories, String sortDir) {
