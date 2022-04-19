@@ -40,6 +40,12 @@ public class Category {
         return newCategory;
     }
 
+    public Category(Integer id, String name, String alias) {
+        this.id = id;
+        this.name = name;
+        this.alias = alias;
+    }
+
     public static Category copyIdAndName(Integer id, String name) {
         Category newCategory = new Category();
         newCategory.setId(id);

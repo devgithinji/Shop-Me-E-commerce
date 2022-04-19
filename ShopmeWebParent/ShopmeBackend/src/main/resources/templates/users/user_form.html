@@ -74,22 +74,6 @@
                 </div>
             </div>
         </form>
-        <div class="modal fade text-center" id="modalDialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="modalTitle">Warning</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <span id="modalBody"></span>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     <script type="text/javascript">
         let moduleURL = "[[@{/users}]]";
@@ -106,23 +90,19 @@
                 if (response === "OK") {
                     form.submit();
                 } else if (response === "Duplicated") {
-                    showModal("Warning", "There is another user having the email " + userEmail)
+                    showWarningModal("Warning", "There is another user having the email " + userEmail)
                 } else {
-                    showModal("Error", "Something went wrong")
+                    showErrorModal("Error", "Something went wrong")
                 }
             }).fail(function () {
-                showModal("Error", "Couldn't connect to server")
+                showErrorModal("Error", "Couldn't connect to server")
             });
             return false;
         }
 
-        function showModal(title, message) {
-            $("#modalTitle").text(title);
-            $("#modalBody").text(message);
-            $("#modalDialog").modal();
-        }
     </script>
 </section>
+<div th:replace="modal_fragments::modal_dialog"></div>
 <div th:replace="fragments::footer"></div>
 <script th:src="@{/js/common_form.js}" type="text/javascript"></script>
 </body>
