@@ -23,7 +23,7 @@
                 <th>Category Image</th>
                 <th>
                     <a class="text-white text-decoration-none"
-                       th:href="@{'/categories/page/'+${pageNum}+'?sortDir='+${reverseSortDir}+${keyWord != null ? '&keyWord='+ keyWord : ''}}">Category
+                       th:href="@{'/categories/page/'+${currentPage}+'?sortDir='+${reverseSortDir}+${keyWord != null ? '&keyWord='+ keyWord : ''}}">Category
                         Name</a>
                     <span
                             th:class="${reverseSortDir == 'desc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}">
