@@ -1,6 +1,5 @@
 package com.densoft.shopmeAdmin.category;
 
-import com.densoft.shopmeAdmin.user.exception.UserNotFoundException;
 import com.densoft.shopmeAdmin.util.FileUpload;
 import com.densoft.shopmecommon.entity.Category;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +24,23 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/categories")
-    public String listCategories(@RequestParam(value = "sortDir", defaultValue = "asc") String sortDir, Model model) {
-        List<Category> categories = categoryService.categoriesList(sortDir);
+    public String listFirstPage(@RequestParam(value = "sortDir", defaultValue = "asc") String sortDir, Model model) {
+        return listByPage(1, sortDir, model);
+    }
+
+    @GetMapping("categories/page/{pageNum}")
+    public String listByPage(@PathVariable(name = "pageNum") int pageNum, @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir, Model model) {
+
+        CategoryPageInfo categoryPageInfo = new CategoryPageInfo();
+
+        List<Category> categories = categoryService.listByPage(categoryPageInfo, pageNum, sortDir);
         model.addAttribute("categories", categories);
         String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+        model.addAttribute("totalPages", categoryPageInfo.getTotalPages());
+        model.addAttribute("totalItems", categoryPageInfo.getTotalElements());
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("sortField", "name");
+        model.addAttribute("sortDir", sortDir);
         model.addAttribute("reverseSortDir", reverseSortDir);
         return "categories/categories";
     }
@@ -86,6 +98,20 @@ public class CategoryController {
         } catch (CategoryNotFoundException e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
         }
+        return "redirect:/categories";
+    }
+
+    @GetMapping("categories/delete/{id}")
+    public String deleteCategory(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            categoryService.delete(id);
+            String categoryDir = "../category-images/" + id;
+            FileUpload.removeDir(categoryDir);
+            redirectAttributes.addFlashAttribute("message", "The user ID " + id + " has been deleted successfully");
+        } catch (CategoryNotFoundException categoryNotFoundException) {
+            redirectAttributes.addFlashAttribute("message", categoryNotFoundException.getMessage());
+        }
+
         return "redirect:/categories";
     }
 }

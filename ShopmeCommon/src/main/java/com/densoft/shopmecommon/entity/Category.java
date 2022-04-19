@@ -60,6 +60,7 @@ public class Category {
         categoryCopy.setImage(category.getImage());
         categoryCopy.setAlias(category.getAlias());
         categoryCopy.setEnabled(category.isEnabled());
+        categoryCopy.setHasChildren(category.getChildren().size() > 0);
         //categoryCopy.setParent(category.parent);
         return categoryCopy;
     }
@@ -88,10 +89,22 @@ public class Category {
     @OneToMany(mappedBy = "parent")
     private Set<Category> children = new HashSet<>();
 
+
     @Transient
     public String getImagePath() {
-        if(this.id == null) return "/images/image-thumbnail.png";
+        if (this.id == null) return "/images/image-thumbnail.png";
 
         return "/category-images/" + this.id + "/" + this.image;
     }
+
+    public boolean isHasChildren() {
+        return hasChildren;
+    }
+
+    public void setHasChildren(boolean hasChildren) {
+        this.hasChildren = hasChildren;
+    }
+
+    @Transient
+    private boolean hasChildren;
 }

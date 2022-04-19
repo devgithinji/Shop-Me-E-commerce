@@ -105,34 +105,9 @@
             <div>&nbsp;</div>
         </div>
     </div>
-    <div class="text-center m-1" th:if="${totalItems > 0}">
-        <span>showing users # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
-    </div>
-    <div class="text-center m-1" th:unless="${totalItems > 0}">
-        <span>No Users Found 😒</span>
-    </div>
-    <div th:if="${totalPages > 1}">
-        <nav>
-            <ul class="pagination justify-content-center flex-wrap">
-                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="fragments::page_link(1, 'First')"></a>
-                </li>
-                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="fragments::page_link(${currentPage -1}, 'Previous')"></a>
-                </li>
-                <li th:each="i : ${#numbers.sequence(1, totalPages)}"
-                    th:class="${currentPage != i ? 'page-item' : 'page-item active'}">
-                    <a th:replace="fragments::page_link(${i}, ${i})"></a>
-                </li>
-                <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="fragments::page_link(${currentPage +1}, 'Next')"></a>
-                </li>
-                <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="fragments::page_link(${totalPages}, 'Last')"></a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    <!--show users no -->
+    <div th:replace="fragments::pagination('/users','users')"></div>
+    <!--    pagination links-->
     <div class="modal fade text-center" id="confirmModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -150,22 +125,19 @@
             </div>
         </div>
     </div>
+    <div th:replace="modal_fragments::confirm_modal"></div>
     <div th:replace="fragments::footer"></div>
+    <script th:src="@{/js/common_list.js}"></script>
     <script type="text/javascript">
+        let moduleURL = "[[@{/users}]]";
+
         $(document).ready(function () {
             $(".link-delete").on("click", function (e) {
                 e.preventDefault();
-                let link = $(this);
-                let userId = link.attr("userId")
-                $("#yesButton").attr("href", link.attr("href"));
-                $("#confirmText").text("Are you sure you want to delete this user ID " + userId + " ?")
-                $("#confirmModal").modal();
+                showDeleteConfirmModal($(this), 'user')
             })
         })
 
-        function clearFilter() {
-            window.location = "[[@{/users}]]"
-        }
     </script>
 </section>
 </body>

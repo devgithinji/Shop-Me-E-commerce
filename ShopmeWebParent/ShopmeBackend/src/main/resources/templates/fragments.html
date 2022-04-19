@@ -21,13 +21,66 @@
 
     </span>
 </th>
-<a th:fragment="page_link(pageNum, label)"
+<a th:fragment="page_link(moduleURL,pageNum, label)"
    class="page-link"
-   th:href="@{'/users/page/'+${pageNum}+'?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyWord != null ? '&keyWord='+keyWord : ''}}">
+   th:href="@{${moduleURL}+'/page/'+${pageNum}+'?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyWord != null ? '&keyWord='+keyWord : ''}}">
     [[${label}]]
 </a>
 <div th:fragment="footer" class="text-center m-3">
     <p>ShopMe Control Panel - Copyright &COPY; ShopMe</p>
+</div>
+<div th:fragment="category_status" th:remove="tag">
+    <a th:if="${category.isEnabled()}" class="fas fa-check-circle fa-2x icon-green text-decoration-none"
+       th:href="@{'/categories/'+${category.id}+'/enabled/false'}" title="Disable this category"></a>
+    <a th:unless="${category.isEnabled()}"
+       class="fas fa-check-circle fa-2x icon-dark text-decoration-none"
+       th:href="@{'/categories/'+${category.id}+'/enabled/true'}" title="Enable this category"></a>
+</div>
+<div th:fragment="category_actions" th:remove="tag">
+    <a class="fa fa-edit fa-2x icon-green" th:href="@{'/categories/edit/'+${category.id}}"
+       title="Edit this category"></a>
+    &nbsp;
+    <th:block th:if="${category.hasChildren == false}">
+        <a class="fa fa-trash fa-2x text-danger link-delete"
+           th:href="@{'/categories/delete/'+${category.id}}"
+           th:categoryId="${category.id}"
+           th:entityId="${category.id}"
+           title="Delete this category"></a>
+    </th:block>
+</div>
+
+<div th:fragment="pagination(moduleURL,entityName)" th:remove="tag">
+
+    <div class="text-center m-1" th:if="${totalItems > 0}">
+        <span>showing [[${entityName}]] # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+    </div>
+
+    <div class="text-center m-1" th:unless="${totalItems > 0}">
+        <span>No [[${entityName}]] Found 😒</span>
+    </div>
+
+    <div th:if="${totalPages > 1}">
+        <nav>
+            <ul class="pagination justify-content-center flex-wrap">
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments::page_link(${moduleURL},1, 'First')"></a>
+                </li>
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments::page_link(${moduleURL},${currentPage -1}, 'Previous')"></a>
+                </li>
+                <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+                    th:class="${currentPage != i ? 'page-item' : 'page-item active'}">
+                    <a th:replace="fragments::page_link(${moduleURL},${i}, ${i})"></a>
+                </li>
+                <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments::page_link(${moduleURL},${currentPage +1}, 'Next')"></a>
+                </li>
+                <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments::page_link(${moduleURL},${totalPages}, 'Last')"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
 </body>
 </html>
