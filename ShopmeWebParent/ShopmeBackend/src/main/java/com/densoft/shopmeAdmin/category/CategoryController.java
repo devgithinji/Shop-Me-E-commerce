@@ -24,12 +24,11 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/categories")
-    public String listCategories(Model model) {
-        List<Category> categories = categoryService.categoriesList();
-        categories.forEach(category -> {
-            System.out.println(category.getName());
-        });
+    public String listCategories(@RequestParam(value = "sortDir", defaultValue = "asc") String sortDir, Model model) {
+        List<Category> categories = categoryService.categoriesList(sortDir);
         model.addAttribute("categories", categories);
+        String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+        model.addAttribute("reverseSortDir", reverseSortDir);
         return "categories/categories";
     }
 
