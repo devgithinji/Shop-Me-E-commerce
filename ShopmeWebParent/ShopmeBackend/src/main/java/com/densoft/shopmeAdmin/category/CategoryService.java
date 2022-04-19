@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -87,5 +88,14 @@ public class CategoryService {
             categoriesUsedInForm.add(Category.copyIdAndName(subCategory.getId(), name));
             listSubCategoriesUsedInForm(categoriesUsedInForm, subCategory, newSubLevel);
         }
+    }
+
+    public Category get(Integer id) throws CategoryNotFoundException {
+        Optional<Category> categoryOptional = categoryRepository.findById(id);
+
+        if (categoryOptional.isPresent()) {
+            return categoryOptional.get();
+        }
+        throw new CategoryNotFoundException("Could not find any category with ID: " + id);
     }
 }

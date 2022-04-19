@@ -72,9 +72,9 @@
     <div class="less-details my-2">
         <div th:each="category : ${categories}" class="row m-1">
             <div class="col-4">
-                <!--                <span th:if="${user.photos == null}" class="fas fa-portrait fa-2x icon-silver"></span>-->
-                <!--                <img th:unless="${user.photos == null}" class="img-thumbnail img-fluid"-->
-                <!--                     th:src="@{${user.photosImagePath}}" alt="" style="width: 100px;max-height: 150px">-->
+                <span th:if="${category.image == null}" class="fas fa-portrait fa-2x icon-silver"></span>
+                <img th:unless="${category.image == null}" class="img-thumbnail img-fluid"
+                     th:src="@{${category.imagePath}}" alt="" style="width: 100px;max-height: 150px">
             </div>
             <div class="col-8">
                 <div>[[${category.name}]]</div>
