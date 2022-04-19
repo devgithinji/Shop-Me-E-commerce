@@ -152,4 +152,18 @@ public class CategoryService {
 
         return sortedChildren;
     }
+
+    public void updateCategoryEnabledStatus(Integer id, boolean enabled) throws CategoryNotFoundException {
+
+        Optional<Category> optionalCategory = categoryRepository.findById(id);
+
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+            category.setEnabled(enabled);
+            categoryRepository.save(category);
+        } else {
+            throw new CategoryNotFoundException("Category with ID: " + id + " not found");
+        }
+
+    }
 }

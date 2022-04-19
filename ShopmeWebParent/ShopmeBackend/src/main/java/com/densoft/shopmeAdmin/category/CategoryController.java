@@ -1,5 +1,6 @@
 package com.densoft.shopmeAdmin.category;
 
+import com.densoft.shopmeAdmin.user.exception.UserNotFoundException;
 import com.densoft.shopmeAdmin.util.FileUpload;
 import com.densoft.shopmecommon.entity.Category;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,5 +75,17 @@ public class CategoryController {
             return "redirect:/categories";
         }
 
+    }
+
+    @GetMapping("/categories/{id}/enabled/{status}")
+    public String updateCategoryEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
+        try {
+            categoryService.updateCategoryEnabledStatus(id, enabled);
+            String status = enabled ? "enabled" : "disabled";
+            redirectAttributes.addFlashAttribute("message", "The user ID " + id + " has been " + status + " successfully");
+        } catch (CategoryNotFoundException e) {
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+        }
+        return "redirect:/categories";
     }
 }
