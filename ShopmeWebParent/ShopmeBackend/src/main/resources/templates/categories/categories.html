@@ -29,7 +29,7 @@
                             th:class="${reverseSortDir == 'desc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}">
                     </span>
                 </th>
-                <th>Alias</th>
+                <th class="hideable-column">Alias</th>
                 <th>Enabled</th>
                 <th>Actions</th>
             </tr>
@@ -43,7 +43,7 @@
                          th:src="@{${category.imagePath}}" alt="" style="width: 100px;max-height: 150px">
                 </td>
                 <td th:text="${category.name}"></td>
-                <td th:text="${category.alias}"></td>
+                <td class="hideable-column" th:text="${category.alias}"></td>
                 <td>
                     <div th:replace="fragments::category_status"></div>
                 </td>
@@ -59,23 +59,14 @@
             <div class="col-4">
                 <span th:if="${category.image == null}" class="fas fa-portrait fa-2x icon-silver"></span>
                 <img th:unless="${category.image == null}" class="img-thumbnail img-fluid"
-                     th:src="@{${category.imagePath}}" alt="" style="width: 100px;max-height: 150px">
+                     th:src="@{${category.imagePath}}" alt="" style="width: 100px;max-height: 200px">
             </div>
             <div class="col-8">
                 <div>[[${category.name}]]</div>
                 <div class="mt-2">
-                    <a th:if="${category.isEnabled()}" class="fas fa-check-circle fa-2x icon-green text-decoration-none"
-                       th:href="@{'/categories/'+${category.id}+'/enabled/false'}" title="Disable this category"></a>
-                    <a th:unless="${category.isEnabled()}"
-                       class="fas fa-check-circle fa-2x icon-dark text-decoration-none"
-                       th:href="@{'/categories/'+${category.id}+'/enabled/true'}" title="Enable this category"></a>
-                    &nbsp;
-                    <a class="fa fa-edit fa-2x icon-green" th:href="@{'/categories/edit/'+${category.id}}"
-                       title="Edit this user"></a>
-                    &nbsp;
-                    <a class="fa fa-trash fa-2x text-danger link-delete"
-                       th:href="@{'/categories/delete/'+${category.id}}"
-                       th:userId="${category.id}"></a>
+                    <div th:replace="fragments::category_status"></div>
+                    &nbsp;&nbsp;
+                    <div th:replace="fragments::category_actions"></div>
                 </div>
             </div>
             <div>&nbsp;</div>
