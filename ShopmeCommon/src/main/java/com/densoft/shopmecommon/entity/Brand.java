@@ -1,9 +1,6 @@
 package com.densoft.shopmecommon.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -15,6 +12,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +29,15 @@ public class Brand {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Set<Category> categories = new HashSet<>();
+
+    public Brand(String name, String logo) {
+        this.name = name;
+        this.logo = logo;
+    }
+
+    @Transient
+    public String getLogoPath() {
+        if (this.id == null) return "/images/image-thumbnail.png";
+        return "/brand-logos/" + this.id + "/" + this.logo;
+    }
 }
