@@ -1,6 +1,6 @@
 package com.densoft.shopmeAdmin.user.export;
 
-import com.densoft.shopmeAdmin.user.export.AbstractExporter;
+import com.densoft.shopmeAdmin.AbstractExporter;
 import com.densoft.shopmecommon.entity.User;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
@@ -14,7 +14,7 @@ public class UserCsvExporter extends AbstractExporter {
 
     public void export(List<User> userList, HttpServletResponse response) throws IOException {
 
-        super.setResponseHeader(response, "text/csv", ".csv");
+        super.setResponseHeader(response, "text/csv", ".csv","user_");
 
         ICsvBeanWriter csvBeanWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
 

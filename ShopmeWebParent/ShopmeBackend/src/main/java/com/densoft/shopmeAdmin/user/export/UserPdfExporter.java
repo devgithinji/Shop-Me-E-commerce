@@ -1,6 +1,6 @@
 package com.densoft.shopmeAdmin.user.export;
 
-import com.densoft.shopmeAdmin.user.export.AbstractExporter;
+import com.densoft.shopmeAdmin.AbstractExporter;
 import com.densoft.shopmecommon.entity.User;
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
@@ -15,7 +15,7 @@ import java.util.List;
 
 public class UserPdfExporter extends AbstractExporter {
     public void export(List<User> users, HttpServletResponse response) throws IOException {
-        super.setResponseHeader(response, "application/pdf", ".pdf");
+        super.setResponseHeader(response, "application/pdf", ".pdf", "user_");
 
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, response.getOutputStream());

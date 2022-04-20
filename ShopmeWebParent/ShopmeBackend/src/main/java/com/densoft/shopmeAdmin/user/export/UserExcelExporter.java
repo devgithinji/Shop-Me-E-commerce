@@ -1,6 +1,6 @@
 package com.densoft.shopmeAdmin.user.export;
 
-import com.densoft.shopmeAdmin.user.export.AbstractExporter;
+import com.densoft.shopmeAdmin.AbstractExporter;
 import com.densoft.shopmecommon.entity.User;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.*;
@@ -54,7 +54,7 @@ public class UserExcelExporter extends AbstractExporter {
     }
 
     public void export(List<User> users, HttpServletResponse response) throws IOException {
-        super.setResponseHeader(response, "application/octet-stream", ".xlsx");
+        super.setResponseHeader(response, "application/octet-stream", ".xlsx", "user_");
 
         writeHeaderLine();
 
