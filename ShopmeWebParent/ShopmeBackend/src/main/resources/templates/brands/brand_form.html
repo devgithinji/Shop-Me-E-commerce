@@ -10,7 +10,8 @@
     <div>
         <form th:action="@{/brands/save}" method="post" style="max-width: 500px; margin: 0 auto"
               th:object="${brand}"
-               enctype="multipart/form-data">
+              enctype="multipart/form-data"
+              onsubmit="return checkUnique(this)">
             <input type="hidden" th:field="*{id}">
             <div class="border border-secondary rounded p-3">
                 <div class="form-group row">
@@ -26,7 +27,7 @@
                         <input type="hidden" th:field="*{logo}">
                         <input type="file" name="fileImage" id="fileImage"
                                accept="image/png, image/jpeg"
-                               class="mb-2" th:required="${brand.logoPath == null}">
+                               class="mb-2" th:required="${brand.id == null}">
                         <img id="thumbnail" th:src="@{${brand.logoPath}}" alt="Image Preview"
                              class="img-thumbnail img-fluid d-block" style="max-height: 200px">
                     </div>
@@ -69,35 +70,35 @@
                 showChosenCategories();
             })
 
+            showChosenCategories();
+
         })
 
         function showChosenCategories() {
             dropdownCategories.children("option:selected").each(function () {
                 let selectedCategory = $(this);
                 let catId = selectedCategory.val();
-                let catName = selectedCategory.text().replace(/-/g,"");
+                let catName = selectedCategory.text().replace(/-/g, "");
 
                 chosenCategories.append("<span class='badge badge-secondary m-1'>" + catName + "</span>")
             })
         }
 
         function checkUnique(form) {
-            let catId = $('#id').val();
-            let catName = $('#name').val();
-            let catAlias = $('#alias').val();
+            let brandId = $('#id').val();
+            let brandName = $('#name').val();
+            ;
             let csrfValue = $("input[name='_csrf']").val();
 
             let url = "[[@{/brands/check_unique}]]";
 
-            let params = {id: catId, name: catName, alias: catAlias, _csrf: csrfValue};
+            let params = {id: brandId, name: brandName, _csrf: csrfValue};
 
             $.post(url, params, function (response) {
                 if (response === "OK") {
                     form.submit();
-                } else if (response === "DuplicateName") {
-                    showWarningModal("There is another category having same name " + catName);
-                } else if (response === "DuplicateAlias") {
-                    showWarningModal("There is another category having same alias " + catAlias);
+                } else if (response === "Duplicate") {
+                    showWarningModal("There is another brand having same name " + brandName);
                 } else {
                     showErrorModal("Unknown response from server");
                 }

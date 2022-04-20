@@ -44,7 +44,7 @@
                         <input type="hidden" th:field="*{image}">
                         <input type="file" name="fileImage" id="fileImage"
                                accept="image/png, image/jpeg"
-                               class="mb-2" th:required="${category.imagePath == null}">
+                               class="mb-2" th:required="${category.id == null}">
                         <img id="thumbnail" th:src="@{${category.imagePath}}" alt="Image Preview"
                              class="img-thumbnail img-fluid d-block" style="max-height: 200px">
                     </div>

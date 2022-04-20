@@ -30,6 +30,13 @@ public class Brand {
     )
     private Set<Category> categories = new HashSet<>();
 
+
+    public Brand(Integer id, String name, String logo) {
+        this.id = id;
+        this.name = name;
+        this.logo = logo;
+    }
+
     public Brand(String name, String logo) {
         this.name = name;
         this.logo = logo;
