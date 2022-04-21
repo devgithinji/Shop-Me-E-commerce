@@ -10,7 +10,7 @@
         <a th:href="@{/brands/export/csv}" class="fas fa-file-csv fa-2x icon-dark mr-2"></a>
     </div>
 
-    <div th:replace="fragments::search_form_and_message('/categories/page/1')"></div>
+    <div th:replace="fragments::search_form_and_message('/brands/page/1')"></div>
 
     <div class="full-details">
         <table class="table table-bordered table-striped table-hover table-responsive-xl">
@@ -18,21 +18,21 @@
             <tr>
                 <th>ID</th>
                 <th>Logo</th>
-                <th th:replace="fragments::column_link('/categories','name', 'Brand Name','none')"></th>
-                <th>Categories</th>
+                <th th:replace="fragments::column_link('/brands','name', 'Brand Name','none')"></th>
+                <th class="hideable-column">Categories</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="brand: ${brands}">
-                <td class="hideable-column" th:text="${brand.id}"></td>
+                <td th:text="${brand.id}"></td>
                 <td>
                     <span th:if="${brand.logo == null}" class="fas fa-portrait fa-2x icon-silver"></span>
                     <img th:unless="${brand.logo == null}" class="img-thumbnail img-fluid"
                          th:src="@{${brand.logoPath}}" alt="" style="width: 100px;max-height: 150px">
                 </td>
                 <td th:text="${brand.name}"></td>
-                <td>
+                <td class="hideable-column">
                     <span class="badge badge-secondary mr-1" th:each="category: ${brand.categories}">[[${category.name}]]</span>
                 </td>
                 <td>
@@ -64,14 +64,7 @@
         </div>
     </div>
 
-    <div th:if="${keyWord != null}" class="text-center">
-        <span>Search result does not show categories in hierarchical form</span>
-        <div th:replace="fragments::pagination('/categories','categories')"></div>
-    </div>
-
-    <th:block th:unless="${keyWord != null}">
-        <div th:replace="fragments::pagination('/categories','top-level categories')"></div>
-    </th:block>
+    <div th:replace="fragments::pagination('/brands','brands')"></div>
 
 
     <div th:replace="modal_fragments::confirm_modal"></div>
