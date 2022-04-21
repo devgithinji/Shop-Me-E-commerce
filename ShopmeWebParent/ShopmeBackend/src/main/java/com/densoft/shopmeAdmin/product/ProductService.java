@@ -15,4 +15,15 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    public Product save(Product product) {
+        if (product.getAlias() == null || product.getAlias().isEmpty()) {
+            String alias = product.getAlias().replaceAll(" ", "_");
+            product.setAlias(alias);
+        } else {
+            product.setAlias(product.getAlias().replaceAll(" ", "_"));
+        }
+
+        return productRepository.save(product);
+    }
+
 }

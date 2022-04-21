@@ -27,11 +27,14 @@ import java.util.List;
 @Controller
 public class BrandController {
 
-    @Autowired
-    private BrandService brandService;
+    private final BrandService brandService;
 
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+
+    public BrandController(BrandService brandService, CategoryService categoryService) {
+        this.brandService = brandService;
+        this.categoryService = categoryService;
+    }
 
 
     @GetMapping("/brands")
