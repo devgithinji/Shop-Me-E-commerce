@@ -38,13 +38,13 @@
 </div>
 
 <div th:fragment="edit(entityName, editURL)" th:remove="tag">
-    <a class="fa fa-edit fa-2x icon-green" th:href="@{${editURL}}"
+    <a class="fa fa-edit fa-2x icon-green text-decoration-none" th:href="@{${editURL}}"
        th:title="'Edit this '+${entityName}"></a>
 </div>
 <div th:fragment="delete(entityName,entityId,deleteURL,visible)" th:remove="tag">
     &nbsp;
     <th:block th:if="${visible == true}">
-        <a class="fa fa-trash fa-2x text-danger link-delete"
+        <a class="fa fa-trash fa-2x text-danger link-delete text-decoration-none"
            th:href="@{${deleteURL}}"
            th:entityId="${entityId}"
            th:title="'Delete this '+${entityName}"></a>
