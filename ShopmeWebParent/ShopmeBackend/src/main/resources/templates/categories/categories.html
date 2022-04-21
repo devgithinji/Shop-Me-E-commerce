@@ -26,7 +26,7 @@
             </thead>
             <tbody>
             <tr th:each="category: ${categories}">
-                <td class="hideable-column" th:text="${category.id}"></td>
+                <td th:text="${category.id}"></td>
                 <td>
                     <span th:if="${category.image == null}" class="fas fa-portrait fa-2x icon-silver"></span>
                     <img th:unless="${category.image == null}" class="img-thumbnail img-fluid"

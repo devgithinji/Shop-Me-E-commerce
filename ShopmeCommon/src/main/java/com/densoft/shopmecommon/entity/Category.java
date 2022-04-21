@@ -1,9 +1,6 @@
 package com.densoft.shopmecommon.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -97,6 +94,11 @@ public class Category {
         return "/category-images/" + this.id + "/" + this.image;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public boolean isHasChildren() {
         return hasChildren;
     }
@@ -107,4 +109,6 @@ public class Category {
 
     @Transient
     private boolean hasChildren;
+
+
 }
