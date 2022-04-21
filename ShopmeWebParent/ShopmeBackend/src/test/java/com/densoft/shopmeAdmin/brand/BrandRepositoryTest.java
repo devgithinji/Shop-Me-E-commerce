@@ -52,6 +52,13 @@ class BrandRepositoryTest {
     }
 
     @Test
+    public void testFindAll() {
+        List<Brand> brands = brandRepository.findAll();
+        brands.forEach(System.out::println);
+        assertThat(brands).isNotEmpty();
+    }
+
+    @Test
     public void testGetBrandById() {
         Optional<Brand> optionalBrand = brandRepository.findById(4);
         assertThat(optionalBrand.get()).isNotNull();
