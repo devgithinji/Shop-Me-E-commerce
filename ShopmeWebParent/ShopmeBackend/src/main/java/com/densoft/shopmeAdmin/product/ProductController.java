@@ -2,6 +2,7 @@ package com.densoft.shopmeAdmin.product;
 
 import com.densoft.shopmeAdmin.brand.BrandService;
 import com.densoft.shopmeAdmin.category.CategoryNotFoundException;
+import com.densoft.shopmeAdmin.util.FileUpload;
 import com.densoft.shopmecommon.entity.Brand;
 import com.densoft.shopmecommon.entity.Product;
 import org.springframework.stereotype.Controller;
@@ -58,6 +59,20 @@ public class ProductController {
     public String saveProduct(Product product, RedirectAttributes redirectAttributes) {
         productService.save(product);
         redirectAttributes.addFlashAttribute("message", "The product has been saved successfully");
+        return "redirect:/products";
+    }
+
+    @GetMapping("products/delete/{id}")
+    public String deleteProduct(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            productService.delete(id);
+//            String categoryDir = "../category-images/" + id;
+//            FileUpload.removeDir(categoryDir);
+            redirectAttributes.addFlashAttribute("message", "The Product ID " + id + " has been deleted successfully");
+        } catch (ProductNotFoundException productNotFoundException) {
+            redirectAttributes.addFlashAttribute("message", productNotFoundException.getMessage());
+        }
+
         return "redirect:/products";
     }
 }

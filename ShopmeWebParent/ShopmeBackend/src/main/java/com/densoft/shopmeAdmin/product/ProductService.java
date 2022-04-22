@@ -52,4 +52,13 @@ public class ProductService {
         }
 
     }
+
+    public void delete(Integer id) throws ProductNotFoundException {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isPresent()) {
+            productRepository.deleteById(id);
+        } else {
+            throw new ProductNotFoundException("Product with ID: " + id + " not found");
+        }
+    }
 }
