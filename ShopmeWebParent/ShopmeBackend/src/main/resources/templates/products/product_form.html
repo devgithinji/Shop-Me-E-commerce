@@ -14,7 +14,8 @@
     <div>
         <form th:action="@{/products/save}" method="post" style="margin: 0 auto"
               th:object="${product}"
-              enctype="multipart/form-data">
+              enctype="multipart/form-data"
+              onsubmit="return checkUnique(this)">
             <input type="hidden" th:field="*{id}">
             <!-- Nav tabs -->
             <div>
@@ -87,6 +88,29 @@
                     $("<option>").val(category.id).text(category.name).appendTo(dropDownCategories);
                 })
             })
+        }
+
+        function checkUnique(form) {
+            let productId = $("#id").val();
+            let productName = $("#name").val();
+            let csrfValue = $("input[name='_csrf']").val();
+
+            let url = "[[@{/products/check_unique}]]"
+            let params = {id: productId, name: productName, _csrf: csrfValue}
+
+            $.post(url, params, function (response) {
+                if (response === "OK") {
+                    form.submit();
+                } else if (response === "Duplicate") {
+                    showWarningModal("There is another product having the name " + productName);
+                } else {
+                    showErrorModal("Unknown response from server")
+                }
+            }).fail(function () {
+                showErrorModal("Could not connect to the server")
+            })
+
+            return false;
         }
 
 
