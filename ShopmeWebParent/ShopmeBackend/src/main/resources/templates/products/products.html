@@ -29,9 +29,8 @@
             <tr th:each="product: ${products}">
                 <td th:text="${product.id}"></td>
                 <td>
-                    <!--                    <span th:if="${product.logo == null}" class="fas fa-portrait fa-2x icon-silver"></span>-->
-                    <!--                    <img th:unless="${product.logo == null}" class="img-thumbnail img-fluid"-->
-                    <!--                         th:src="@{${product.logoPath}}" alt="" style="width: 100px;max-height: 150px">-->
+                    <img class="img-thumbnail img-fluid"
+                         th:src="@{${product.mainImagePath}}" alt="" style="width: 120px;max-height: 150px">
                 </td>
                 <td th:text="${product.name}"></td>
                 <td th:text="${product.brand.name}"></td>
@@ -42,7 +41,8 @@
                     <div th:replace="fragments::status(${product.enabled},'product','/products/'+${product.id})"></div>
                 </th>
                 <td>
-                    <a class="fas fa-file-alt fa-2x icon-green mr-3 text-decoration-none" th:href="@{'/products/detail/'+${product.id}}"
+                    <a class="fas fa-file-alt fa-2x icon-green mr-3 text-decoration-none"
+                       th:href="@{'/products/detail/'+${product.id}}"
                        title="View details of this product"></a>
                     <div th:replace="fragments::edit('product', '/products/edit/'+${product.id})"></div>
                     &nbsp;&nbsp;

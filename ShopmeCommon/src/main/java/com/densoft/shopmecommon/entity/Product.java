@@ -7,6 +7,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -59,6 +61,9 @@ public class Product {
     @ColumnDefault("0")
     private float weight;
 
+    @Column(name = "main_image", nullable = false)
+    private String mainImage;
+
     @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -69,4 +74,17 @@ public class Product {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private Set<ProductImage> images = new HashSet<>();
+
+    public void addExtraImage(String imageName) {
+        this.images.add(new ProductImage(imageName, this));
+    }
+
+
+    @Transient
+    public String getMainImagePath() {
+        if (id == null || mainImage == null) return "/images/image-thumbnail.png";
+        return "/product-images/" + this.id + "/" + this.mainImage;
+    }
 }
