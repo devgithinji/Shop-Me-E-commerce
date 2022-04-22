@@ -1,11 +1,13 @@
 package com.densoft.shopmeAdmin.product;
 
 import com.densoft.shopmeAdmin.brand.BrandService;
+import com.densoft.shopmeAdmin.category.CategoryNotFoundException;
 import com.densoft.shopmecommon.entity.Brand;
 import com.densoft.shopmecommon.entity.Product;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -38,6 +40,18 @@ public class ProductController {
         model.addAttribute("product", product);
         model.addAttribute("pageTitle", "Create New Product");
         return "products/product_form";
+    }
+
+    @GetMapping("/products/{id}/enabled/{status}")
+    public String updateProductEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
+        try {
+            productService.updateProductEnabledStatus(id, enabled);
+            String status = enabled ? "enabled" : "disabled";
+            redirectAttributes.addFlashAttribute("message", "The product ID " + id + " has been " + status + " successfully");
+        } catch (ProductNotFoundException e) {
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+        }
+        return "redirect:/products";
     }
 
     @PostMapping("/products/save")

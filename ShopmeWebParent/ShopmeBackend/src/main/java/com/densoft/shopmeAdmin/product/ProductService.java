@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -40,4 +41,15 @@ public class ProductService {
         return "OK";
     }
 
+    public void updateProductEnabledStatus(Integer id, boolean enabled) throws ProductNotFoundException {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            product.setEnabled(enabled);
+            productRepository.save(product);
+        } else {
+            throw new ProductNotFoundException("Product with ID: " + id + " not found");
+        }
+
+    }
 }
