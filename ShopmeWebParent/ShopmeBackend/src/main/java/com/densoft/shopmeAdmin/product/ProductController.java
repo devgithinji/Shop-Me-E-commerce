@@ -1,7 +1,6 @@
 package com.densoft.shopmeAdmin.product;
 
 import com.densoft.shopmeAdmin.brand.BrandService;
-import com.densoft.shopmeAdmin.category.CategoryNotFoundException;
 import com.densoft.shopmeAdmin.util.FileUpload;
 import com.densoft.shopmecommon.entity.Brand;
 import com.densoft.shopmecommon.entity.Product;
@@ -60,27 +59,66 @@ public class ProductController {
     }
 
     @PostMapping("/products/save")
-    public String saveProduct(Product product, @RequestParam("fileImage") MultipartFile multipartFile, RedirectAttributes redirectAttributes) throws IOException {
-        if (!multipartFile.isEmpty()) {
-            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-            product.setMainImage(fileName);
-            Product savedProduct = productService.save(product);
-            String uploadDir = "../product-images/" + savedProduct.getId();
-            FileUpload.cleanDir(uploadDir);
-            FileUpload.saveFile(uploadDir, fileName, multipartFile);
-        } else {
-            productService.save(product);
-        }
+    public String saveProduct(
+            Product product,
+            @RequestParam("fileImage") MultipartFile mainImageMultipartFile,
+            @RequestParam("extraImage") MultipartFile[] extraImageMultiPartFiles,
+            RedirectAttributes redirectAttributes) throws IOException {
+        setMainImageName(mainImageMultipartFile, product);
+        setExtraImageNames(extraImageMultiPartFiles, product);
+
+        Product savedProduct = productService.save(product);
+        saveUploadedImages(mainImageMultipartFile, extraImageMultiPartFiles, savedProduct);
+
         redirectAttributes.addFlashAttribute("message", "The product has been saved successfully");
         return "redirect:/products";
+    }
+
+    private void saveUploadedImages(MultipartFile mainImageMultipartFile, MultipartFile[] extraImageMultiPartFiles, Product savedProduct) throws IOException {
+        if (!mainImageMultipartFile.isEmpty()) {
+            String fileName = StringUtils.cleanPath(mainImageMultipartFile.getOriginalFilename());
+            String uploadDir = "../product-images/" + savedProduct.getId();
+            FileUpload.cleanDir(uploadDir);
+            FileUpload.saveFile(uploadDir, fileName, mainImageMultipartFile);
+        }
+
+        if (extraImageMultiPartFiles.length > 0) {
+            String uploadDir = "../product-images/" + savedProduct.getId() + "/extras";
+            for (MultipartFile multipartFile : extraImageMultiPartFiles) {
+                if (multipartFile.isEmpty()) continue;
+                String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+                FileUpload.saveFile(uploadDir, fileName, multipartFile);
+            }
+        }
+
+    }
+
+    private void setExtraImageNames(MultipartFile[] extraImageMultiPartFiles, Product product) {
+        if (extraImageMultiPartFiles.length > 0) {
+            for (MultipartFile multipartFile : extraImageMultiPartFiles) {
+                if (!multipartFile.isEmpty()) {
+                    String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+                    product.addExtraImage(fileName);
+                }
+            }
+        }
+    }
+
+    private void setMainImageName(MultipartFile mainImageMultipartFile, Product product) {
+        if (!mainImageMultipartFile.isEmpty()) {
+            String fileName = StringUtils.cleanPath(mainImageMultipartFile.getOriginalFilename());
+            product.setMainImage(fileName);
+        }
     }
 
     @GetMapping("products/delete/{id}")
     public String deleteProduct(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
         try {
             productService.delete(id);
-//            String categoryDir = "../category-images/" + id;
-//            FileUpload.removeDir(categoryDir);
+            String productExtraImagesDir = "../product-images/" + id + "/extras";
+            String productImagesDir = "../product-images/" + id;
+            FileUpload.removeDir(productExtraImagesDir);
+            FileUpload.removeDir(productImagesDir);
             redirectAttributes.addFlashAttribute("message", "The Product ID " + id + " has been deleted successfully");
         } catch (ProductNotFoundException productNotFoundException) {
             redirectAttributes.addFlashAttribute("message", productNotFoundException.getMessage());
