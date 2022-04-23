@@ -61,4 +61,13 @@ public class ProductService {
             throw new ProductNotFoundException("Product with ID: " + id + " not found");
         }
     }
+
+    public Product get(Integer id) throws ProductNotFoundException {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if(optionalProduct.isPresent()){
+            return optionalProduct.get();
+        }
+        throw new ProductNotFoundException("Product with ID: " + id + " not found");
+    }
+
 }

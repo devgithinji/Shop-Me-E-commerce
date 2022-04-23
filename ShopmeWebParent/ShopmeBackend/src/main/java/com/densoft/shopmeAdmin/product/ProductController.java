@@ -140,4 +140,29 @@ public class ProductController {
 
         return "redirect:/products";
     }
+
+    @GetMapping("/products/edit/{id}")
+    public String editProduct(
+            @PathVariable("id") Integer id,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        try {
+            Product product = productService.get(id);
+            model.addAttribute("product", product);
+            model.addAttribute("pageTitle", "Edit Product (ID: " + id + ")");
+
+            List<Brand> brands = brandService.listAll();
+            model.addAttribute("brands", brands);
+            model.addAttribute("product", product);
+            Integer numberOfExistingExtraImages = product.getImages().size();
+            model.addAttribute("numberOfExistingExtraImages", numberOfExistingExtraImages);
+
+            return "products/product_form";
+
+        } catch (ProductNotFoundException e) {
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            return "redirect:/products";
+        }
+
+    }
 }
