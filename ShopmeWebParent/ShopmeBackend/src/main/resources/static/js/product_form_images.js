@@ -1,20 +1,12 @@
 let extraImagesCount = 0;
-let dropDownBrands = $("#brand");
-let dropDownCategories = $("#category");
 
 $(document).ready(function () {
-    $("#shortDescription").richText();
-    $("#fullDescription").richText();
-
-    dropDownBrands.change(function () {
-        dropDownCategories.empty();
-        getCategories();
-    })
-    getCategories();
-
     $("input[name = 'extraImage']").each(function (index) {
         extraImagesCount++;
         $(this).change(function () {
+            if (!checkFileSize(this)) {
+                return;
+            }
             showExtraImageThumbNail(this, index);
         })
     })
@@ -66,38 +58,4 @@ function addNextExtraImageSection(index) {
 function removeExtraImage(index) {
     $("#divExtraImage" + index).remove();
     //extraImagesCount--;
-}
-
-function getCategories() {
-    let brandId = dropDownBrands.val();
-    let url = brandsModuleURL + "/" + brandId + "/categories";
-
-    $.get(url, function (responseJson) {
-        $.each(responseJson, function (index, category) {
-            $("<option>").val(category.id).text(category.name).appendTo(dropDownCategories);
-        })
-    })
-}
-
-
-function checkUnique(form) {
-    let productId = $("#id").val();
-    let productName = $("#name").val();
-    let csrfValue = $("input[name='_csrf']").val();
-
-    let params = {id: productId, name: productName, _csrf: csrfValue}
-
-    $.post(checkUniqueUrl, params, function (response) {
-        if (response === "OK") {
-            form.submit();
-        } else if (response === "Duplicate") {
-            showWarningModal("There is another product having the name " + productName);
-        } else {
-            showErrorModal("Unknown response from server")
-        }
-    }).fail(function () {
-        showErrorModal("Could not connect to the server")
-    })
-
-    return false;
 }

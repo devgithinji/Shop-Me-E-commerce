@@ -42,14 +42,18 @@
                     <div class="tab-pane active p-3" id="overview" role="tabpanel">
                         <div th:replace="products/product_overview::content"></div>
                     </div>
-                    <div class="tab-pane" id="description" role="tabpanel">
+                    <div class="tab-pane p-3" id="description" role="tabpanel">
                         <div th:replace="products/product_description::content"></div>
                     </div>
-                    <div class="tab-pane" id="images" role="tabpanel">
+                    <div class="tab-pane p-3" id="images" role="tabpanel">
                         <div th:replace="products/product_images::content"></div>
                     </div>
-                    <div class="tab-pane" id="details" role="tabpanel">
-                        Details
+                    <div class="tab-pane p-3" id="details" role="tabpanel">
+                        <div th:replace="products/product_details::content"></div>
+                        <div>
+                            <input type="button" class="btn btn-secondary" value="Add More Detail"
+                                   onclick="addNextDetailSection()">
+                        </div>
                     </div>
                     <div class="tab-pane p-3" id="shipping" role="tabpanel">
                         <div th:replace="products/product_shipping::content"></div>
@@ -76,6 +80,8 @@
 <div th:replace="modal_fragments::modal_dialog"></div>
 <div th:replace="fragments::footer"></div>
 <script th:src="@{/js/common_form.js}" type="text/javascript"></script>
-<script th:src="@{/js/product_form.js}" type="text/javascript"></script>
+<script th:src="@{/js/product_form_overview.js}" type="text/javascript"></script>
+<script th:src="@{/js/product_form_images.js}" type="text/javascript"></script>
+<script th:src="@{/js/product_form_details.js}" type="text/javascript"></script>
 </body>
 </html>
