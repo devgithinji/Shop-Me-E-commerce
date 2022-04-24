@@ -1,7 +1,12 @@
 package com.densoft.shopmeAdmin.product;
 
+import com.densoft.shopmecommon.entity.Brand;
 import com.densoft.shopmecommon.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,11 +14,26 @@ import java.util.Optional;
 
 @Service
 public class ProductService {
+
+    public static final int PRODUCTS_PER_PAGE = 5;
     @Autowired
     private ProductRepository productRepository;
 
     public List<Product> listAll() {
         return productRepository.findAll();
+    }
+
+
+    public Page<Product> listByPage(int pageNum, String sortField, String sortDir, String keyWord) {
+        Sort sort = Sort.by(sortField);
+
+        sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? sort.ascending() : sort.descending();
+
+        Pageable pageable = PageRequest.of(pageNum - 1, PRODUCTS_PER_PAGE, sort);
+        if (keyWord != null) {
+            return productRepository.findAll(keyWord, pageable);
+        }
+        return productRepository.findAll(pageable);
     }
 
     public Product save(Product product) {

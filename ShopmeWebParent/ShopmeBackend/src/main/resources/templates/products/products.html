@@ -16,11 +16,12 @@
         <table class="table table-bordered table-striped table-hover table-responsive-xl">
             <thead class="thead-dark">
             <tr>
-                <th>ID</th>
+                <th th:replace="fragments::column_link('/products','id', 'ID','none')"></th>
                 <th>Main Image</th>
-                <th th:replace="fragments::column_link('/products','name', 'Product Name','none')"></th>
-                <th>Brand</th>
-                <th class="hideable-column">Category</th>
+                <th style="width: 40%"
+                    th:replace="fragments::column_link('/products','name', 'Product Name','none')"></th>
+                <th th:replace="fragments::column_link('/products','brand', 'Brand','none')"></th>
+                <th th:replace="fragments::column_link('/products','category', 'Category','none')"></th>
                 <th>Enabled</th>
                 <th>Actions</th>
             </tr>
@@ -32,11 +33,11 @@
                     <img class="img-thumbnail img-fluid"
                          th:src="@{${product.mainImagePath}}" alt="" style="width: 120px;max-height: 150px">
                 </td>
-                <td>
+                <td style="width: 40%">
                     <a class="text-decoration-none link-detail"
                        th:href="@{'/products/detail/'+${product.id}}"
-                       title="View details of this product">
-                        [[${product.name}]]
+                       th:title="${product.name}">
+                        [[${product.shortName}]]
                     </a>
                 </td>
                 <td th:text="${product.brand.name}"></td>
@@ -78,7 +79,7 @@
         </div>
     </div>
 
-    <div th:replace="fragments::pagination('/product','products')"></div>
+    <div th:replace="fragments::pagination('/products','products')"></div>
 
 
     <div th:replace="modal_fragments::confirm_modal"></div>

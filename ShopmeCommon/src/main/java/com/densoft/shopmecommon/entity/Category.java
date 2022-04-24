@@ -25,6 +25,16 @@ public class Category {
 
     private boolean enabled;
 
+    @Column(name = "all_parent_ids", length = 256, nullable = true)
+    private String allParentIDs;
+
+
+    @OneToOne
+    @JoinColumn(name = "parent_id")
+    private Category parent;
+
+    @OneToMany(mappedBy = "parent")
+    private Set<Category> children = new HashSet<>();
 
     public Category(Integer id) {
         this.id = id;
@@ -79,13 +89,6 @@ public class Category {
         this.parent = parent;
     }
 
-    @OneToOne
-    @JoinColumn(name = "parent_id")
-    private Category parent;
-
-    @OneToMany(mappedBy = "parent")
-    private Set<Category> children = new HashSet<>();
-
 
     @Transient
     public String getImagePath() {
@@ -110,5 +113,7 @@ public class Category {
     @Transient
     private boolean hasChildren;
 
-
+    public void setAllParentIDs(String allParentIDs) {
+        this.allParentIDs = allParentIDs;
+    }
 }

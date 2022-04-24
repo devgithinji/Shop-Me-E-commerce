@@ -7,6 +7,7 @@ import com.densoft.shopmecommon.entity.Product;
 import com.densoft.shopmecommon.entity.ProductImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -38,9 +39,33 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public String listAll(Model model) {
-        List<Product> productList = productService.listAll();
-        model.addAttribute("products", productList);
+    public String listFirstPage(Model model) {
+        return listByPage(1, model, "name", "asc", null);
+    }
+
+
+    @GetMapping("/products/page/{pageNum}")
+    public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model, @RequestParam(value = "sortField", defaultValue = "name") String sortField, @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir, @RequestParam(value = "keyWord", required = false) String keyWord) {
+        Page<Product> page = productService.listByPage(pageNum, sortField, sortDir, keyWord);
+        List<Product> products = page.getContent();
+        long startCount = (long) (pageNum - 1) * ProductService.PRODUCTS_PER_PAGE + 1;
+        long endCount = startCount + ProductService.PRODUCTS_PER_PAGE - 1;
+        if (endCount > page.getTotalElements()) {
+            endCount = page.getTotalElements();
+        }
+
+        String reverseSortDir = sortDir.equalsIgnoreCase("asc") ? "desc" : "asc";
+
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("startCount", startCount);
+        model.addAttribute("endCount", endCount);
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("products", products);
+        model.addAttribute("reverseSortDir", reverseSortDir);
+        model.addAttribute("keyWord", keyWord);
         return "products/products";
     }
 
