@@ -72,10 +72,10 @@ public class Product {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductImage> images = new HashSet<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductDetail> details = new ArrayList<>();
 
     public void addExtraImage(String imageName) {
@@ -91,5 +91,18 @@ public class Product {
     public String getMainImagePath() {
         if (id == null || mainImage == null) return "/images/image-thumbnail.png";
         return "/product-images/" + this.id + "/" + this.mainImage;
+    }
+
+    public boolean containsImageName(String fileName) {
+        for (ProductImage image : images) {
+            if (image.getName().equals(fileName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void addDetail(Integer id, String name, String value) {
+        this.details.add(new ProductDetail(id, name, value, this));
     }
 }
