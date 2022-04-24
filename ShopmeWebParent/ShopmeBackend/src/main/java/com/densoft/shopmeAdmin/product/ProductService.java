@@ -18,7 +18,7 @@ public class ProductService {
 
     public Product save(Product product) {
         if (product.getAlias() == null || product.getAlias().isEmpty()) {
-            String alias = product.getAlias().replaceAll(" ", "_");
+            String alias = product.getName().replaceAll(" ", "_");
             product.setAlias(alias);
         } else {
             product.setAlias(product.getAlias().replaceAll(" ", "_"));
@@ -64,7 +64,7 @@ public class ProductService {
 
     public Product get(Integer id) throws ProductNotFoundException {
         Optional<Product> optionalProduct = productRepository.findById(id);
-        if(optionalProduct.isPresent()){
+        if (optionalProduct.isPresent()) {
             return optionalProduct.get();
         }
         throw new ProductNotFoundException("Product with ID: " + id + " not found");
