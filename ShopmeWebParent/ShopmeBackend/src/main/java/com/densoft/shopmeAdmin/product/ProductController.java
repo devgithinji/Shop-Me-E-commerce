@@ -202,7 +202,6 @@ public class ProductController {
             RedirectAttributes redirectAttributes) {
         try {
             Product product = productService.get(id);
-            model.addAttribute("product", product);
             model.addAttribute("pageTitle", "Edit Product (ID: " + id + ")");
 
             List<Brand> brands = brandService.listAll();
@@ -219,4 +218,22 @@ public class ProductController {
         }
 
     }
+
+    @GetMapping("/products/detail/{id}")
+    public String viewProductDetails(
+            @PathVariable("id") Integer id,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        try {
+            Product product = productService.get(id);
+            model.addAttribute("product", product);
+            return "products/product_detail_modal";
+
+        } catch (ProductNotFoundException e) {
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            return "redirect:/products";
+        }
+
+    }
+
 }

@@ -32,7 +32,13 @@
                     <img class="img-thumbnail img-fluid"
                          th:src="@{${product.mainImagePath}}" alt="" style="width: 120px;max-height: 150px">
                 </td>
-                <td th:text="${product.name}"></td>
+                <td>
+                    <a class="text-decoration-none link-detail"
+                       th:href="@{'/products/detail/'+${product.id}}"
+                       title="View details of this product">
+                        [[${product.name}]]
+                    </a>
+                </td>
                 <td th:text="${product.brand.name}"></td>
                 <td class="hideable-column">
                     <span class="badge badge-secondary mr-1" th:text="${product.category.name}"></span>
@@ -41,7 +47,7 @@
                     <div th:replace="fragments::status(${product.enabled},'product','/products/'+${product.id})"></div>
                 </th>
                 <td>
-                    <a class="fas fa-file-alt fa-2x icon-green mr-3 text-decoration-none"
+                    <a class="fas fa-file-alt fa-2x icon-green mr-3 text-decoration-none link-detail"
                        th:href="@{'/products/detail/'+${product.id}}"
                        title="View details of this product"></a>
                     <div th:replace="fragments::edit('product', '/products/edit/'+${product.id})"></div>
@@ -76,6 +82,15 @@
 
 
     <div th:replace="modal_fragments::confirm_modal"></div>
+
+    <div class="modal fade" id="detailModal">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+
     <div th:replace="fragments::footer"></div>
     <script th:src="@{/js/common_list.js}"></script>
     <script type="text/javascript">
@@ -85,6 +100,12 @@
             $(".link-delete").on("click", function (e) {
                 e.preventDefault();
                 showDeleteConfirmModal($(this), 'product')
+            })
+
+            $(".link-detail").on("click", function (e) {
+                e.preventDefault();
+                let linkDetailURL = $(this).attr("href");
+                $("#detailModal").modal("show").find(".modal-content").load(linkDetailURL);
             })
         })
     </script>
