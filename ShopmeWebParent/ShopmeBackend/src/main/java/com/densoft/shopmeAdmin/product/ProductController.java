@@ -1,12 +1,15 @@
 package com.densoft.shopmeAdmin.product;
 
 import com.densoft.shopmeAdmin.brand.BrandService;
+import com.densoft.shopmeAdmin.category.CategoryService;
 import com.densoft.shopmeAdmin.util.FileUpload;
 import com.densoft.shopmecommon.entity.Brand;
+import com.densoft.shopmecommon.entity.Category;
 import com.densoft.shopmecommon.entity.Product;
 import com.densoft.shopmecommon.entity.ProductImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,22 +34,33 @@ public class ProductController {
     private final ProductService productService;
     private final BrandService brandService;
 
+    private final CategoryService categoryService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
-    public ProductController(ProductService productService, BrandService brandService) {
+    public ProductController(ProductService productService, BrandService brandService, CategoryService categoryService) {
         this.productService = productService;
         this.brandService = brandService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/products")
     public String listFirstPage(Model model) {
-        return listByPage(1, model, "name", "asc", null);
+        return listByPage(1, model, "name", "asc", null, 0);
     }
 
 
     @GetMapping("/products/page/{pageNum}")
-    public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model, @RequestParam(value = "sortField", defaultValue = "name") String sortField, @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir, @RequestParam(value = "keyWord", required = false) String keyWord) {
-        Page<Product> page = productService.listByPage(pageNum, sortField, sortDir, keyWord);
+    public String listByPage(
+            @PathVariable(name = "pageNum") int pageNum,
+            Model model, @RequestParam(value = "sortField", defaultValue = "name") String sortField,
+            @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
+            @RequestParam(value = "keyWord", required = false) String keyWord,
+            @RequestParam(value = "categoryId", defaultValue = "0") Integer categoryId) {
+        System.out.println("selected category id: " + categoryId);
+
+        Page<Product> page = productService.listByPage(pageNum, sortField, sortDir, keyWord, categoryId);
+        List<Category> categoryList = categoryService.listCategoriesUsedInForm();
         List<Product> products = page.getContent();
         long startCount = (long) (pageNum - 1) * ProductService.PRODUCTS_PER_PAGE + 1;
         long endCount = startCount + ProductService.PRODUCTS_PER_PAGE - 1;
@@ -55,6 +69,8 @@ public class ProductController {
         }
 
         String reverseSortDir = sortDir.equalsIgnoreCase("asc") ? "desc" : "asc";
+
+        if (categoryId != null) model.addAttribute("categoryId", categoryId);
 
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("totalPages", page.getTotalPages());
@@ -66,6 +82,7 @@ public class ProductController {
         model.addAttribute("products", products);
         model.addAttribute("reverseSortDir", reverseSortDir);
         model.addAttribute("keyWord", keyWord);
+        model.addAttribute("listCategories", categoryList);
         return "products/products";
     }
 

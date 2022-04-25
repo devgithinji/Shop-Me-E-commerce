@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,14 +25,23 @@ public class ProductService {
     }
 
 
-    public Page<Product> listByPage(int pageNum, String sortField, String sortDir, String keyWord) {
+    public Page<Product> listByPage(int pageNum, String sortField, String sortDir, String keyWord, Integer categoryId) {
         Sort sort = Sort.by(sortField);
 
         sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? sort.ascending() : sort.descending();
 
         Pageable pageable = PageRequest.of(pageNum - 1, PRODUCTS_PER_PAGE, sort);
-        if (keyWord != null) {
+        if (keyWord != null && !keyWord.isEmpty()) {
+            if (categoryId != null && categoryId > 0) {
+                String categoryIdMatch = "-" + categoryId + "-";
+                return productRepository.searchInCategory(categoryId, categoryIdMatch, keyWord, pageable);
+            }
             return productRepository.findAll(keyWord, pageable);
+        }
+
+        if (categoryId != null && categoryId > 0) {
+            String categoryIdMatch = "-" + categoryId + "-";
+            return productRepository.findAllInCategory(categoryId, categoryIdMatch, pageable);
         }
         return productRepository.findAll(pageable);
     }

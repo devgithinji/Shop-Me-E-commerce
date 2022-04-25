@@ -15,7 +15,7 @@
 
 <th th:fragment="column_link(moduleURL,fieldName, columnLabel,removeTag)" th:remove="${removeTag}">
     <a class="text-decoration-none text-white"
-       th:href="@{${moduleURL}+'/page/'+${currentPage} + '?sortField='+${fieldName}+'&sortDir='+${sortField != fieldName ? sortDir : reverseSortDir}+${keyWord != null ? '&keyWord='+ keyWord : ''}}">[[${columnLabel}]]</a>
+       th:href="@{${moduleURL}+'/page/'+${currentPage} + '?sortField='+${fieldName}+'&sortDir='+${sortField != fieldName ? sortDir : reverseSortDir}+${keyWord != null ? '&keyWord='+ keyWord : ''}+${categoryId != null ? '&categoryId='+categoryId:''}}">[[${columnLabel}]]</a>
     <span th:if="${sortField == fieldName}"
           th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}">
 
@@ -23,7 +23,7 @@
 </th>
 <a th:fragment="page_link(moduleURL,pageNum, label)"
    class="page-link"
-   th:href="@{${moduleURL}+'/page/'+${pageNum}+'?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyWord != null ? '&keyWord='+keyWord : ''}}">
+   th:href="@{${moduleURL}+'/page/'+${pageNum}+'?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyWord != null ? '&keyWord='+keyWord : ''}+${categoryId != null ? '&categoryId='+categoryId : ''}}">
     [[${label}]]
 </a>
 <div th:fragment="footer" class="text-center m-3">
