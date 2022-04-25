@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <head th:replace="fragments::page_head(${pageTitle},'tag')"></head>
     <link rel="stylesheet" th:href="@{/richtext/richtext.min.css}">
@@ -44,7 +45,12 @@
                         <div th:replace="products/product_overview::content"></div>
                     </div>
                     <div class="tab-pane p-3" id="description" role="tabpanel">
-                        <div th:replace="products/product_description::content"></div>
+                        <th:block sec:authorize="hasAnyAuthority('Salesperson')">
+                            <div th:replace="products/product_description_readonly::content"></div>
+                        </th:block>
+                        <th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
+                            <div th:replace="products/product_description::content"></div>
+                        </th:block>
                     </div>
                     <div class="tab-pane p-3" id="images" role="tabpanel">
                         <div th:replace="products/product_images::content"></div>

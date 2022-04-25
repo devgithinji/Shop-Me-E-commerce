@@ -2,6 +2,7 @@ package com.densoft.shopmeAdmin.product;
 
 import com.densoft.shopmeAdmin.brand.BrandService;
 import com.densoft.shopmeAdmin.category.CategoryService;
+import com.densoft.shopmeAdmin.security.CustomUserDetails;
 import com.densoft.shopmeAdmin.util.FileUpload;
 import com.densoft.shopmecommon.entity.Brand;
 import com.densoft.shopmecommon.entity.Category;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -114,14 +116,26 @@ public class ProductController {
     @PostMapping("/products/save")
     public String saveProduct(
             Product product,
-            @RequestParam("fileImage") MultipartFile mainImageMultipartFile,
-            @RequestParam("extraImage") MultipartFile[] extraImageMultiPartFiles,
+            @RequestParam(value = "fileImage", required = false) MultipartFile mainImageMultipartFile,
+            @RequestParam(value = "extraImage", required = false) MultipartFile[] extraImageMultiPartFiles,
             @RequestParam(name = "detailIDs", required = false) String[] detailIDs,
             @RequestParam(name = "detailNames", required = false) String[] detailNames,
             @RequestParam(name = "detailValues", required = false) String[] detailValues,
             @RequestParam(name = "imageIDs", required = false) String[] imageIDs,
             @RequestParam(name = "imageNames", required = false) String[] imageNames,
-            RedirectAttributes redirectAttributes) throws IOException {
+            RedirectAttributes redirectAttributes,
+            @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
+
+        if (userDetails.hasRole("SalesPerson")) {
+            try {
+                productService.saveProductPrice(product);
+                redirectAttributes.addFlashAttribute("message", "The product saved successfully");
+            } catch (ProductNotFoundException e) {
+                redirectAttributes.addFlashAttribute("message", e.getMessage());
+            }
+            return "redirect:/products";
+        }
+
         setMainImageName(mainImageMultipartFile, product);
         setExistingExtraImageNames(imageIDs, imageNames, product);
         setNewExtraImageNames(extraImageMultiPartFiles, product);

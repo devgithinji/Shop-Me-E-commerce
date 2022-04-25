@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head th:replace="fragments::page_head('Products - ShopMe Admin','none')"></head>
 <body class="container-fluid">
 <div th:replace="navigation::menu"></div>
 <section>
     <div class="my-2">
         <h2 class="text-primary">Manage Products</h2>
-        <a th:href="@{/products/new}" class="fas fa-folder-plus fa-2x icon-dark mr-2"></a>
-        <a th:href="@{/products/export/csv}" class="fas fa-file-csv fa-2x icon-dark mr-2"></a>
+        <th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
+            <a th:href="@{/products/new}" class="fas fa-folder-plus fa-2x icon-dark mr-2"></a>
+            <a th:href="@{/products/export/csv}" class="fas fa-file-csv fa-2x icon-dark mr-2"></a>
+        </th:block>
+
     </div>
 
     <form th:action="@{/products/page/1}" class="form-inline m-3" id="searchForm">
@@ -40,19 +44,27 @@
         <table class="table table-bordered table-striped table-hover table-responsive-xl">
             <thead class="thead-dark">
             <tr>
-                <th th:replace="fragments::column_link('/products','id', 'ID','none')"></th>
+                <th class="hideable-column">
+                <th th:replace="fragments::column_link('/products','id', 'ID','tag')"></th>
+                </th>
                 <th>Main Image</th>
                 <th style="width: 40%"
                     th:replace="fragments::column_link('/products','name', 'Product Name','none')"></th>
-                <th th:replace="fragments::column_link('/products','brand', 'Brand','none')"></th>
-                <th th:replace="fragments::column_link('/products','category', 'Category','none')"></th>
-                <th>Enabled</th>
+                <th class="hideable-column">
+                <th th:replace="fragments::column_link('/products','brand', 'Brand','tag')"></th>
+                </th>
+                <th class="hideable-column">
+                <th th:replace="fragments::column_link('/products','category', 'Category','tags')"></th>
+                </th>
+                <th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
+                    <th>Enabled</th>
+                </th:block>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="product: ${products}">
-                <td th:text="${product.id}"></td>
+                <td class="hideable-column" th:text="${product.id}"></td>
                 <td>
                     <img class="img-thumbnail img-fluid"
                          th:src="@{${product.mainImagePath}}" alt="" style="width: 120px;max-height: 150px">
@@ -64,20 +76,24 @@
                         [[${product.shortName}]]
                     </a>
                 </td>
-                <td th:text="${product.brand.name}"></td>
-                <td class="hideable-column">
-                    <span class="badge badge-secondary mr-1" th:text="${product.category.name}"></span>
-                </td>
-                <th>
-                    <div th:replace="fragments::status(${product.enabled},'product','/products/'+${product.id})"></div>
-                </th>
+                <td class="hideable-column" th:text="${product.brand.name}"></td>
+                <td class="hideable-column" th:text="${product.category.name}"></td>
+                <th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
+                    <th>
+                        <div th:replace="fragments::status(${product.enabled},'product','/products/'+${product.id})"></div>
+                    </th>
+                </th:block>
                 <td>
                     <a class="fas fa-file-alt fa-2x icon-green mr-3 text-decoration-none link-detail"
                        th:href="@{'/products/detail/'+${product.id}}"
                        title="View details of this product"></a>
-                    <div th:replace="fragments::edit('product', '/products/edit/'+${product.id})"></div>
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Editor','Salesperson')">
+                        <div th:replace="fragments::edit('product', '/products/edit/'+${product.id})"></div>
+                    </th:block>
                     &nbsp;&nbsp;
-                    <div th:replace="fragments::delete('product',${product.id},'/products/delete/'+${product.id},true)"></div>
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
+                        <div th:replace="fragments::delete('product',${product.id},'/products/delete/'+${product.id},true)"></div>
+                    </th:block>
 
                 </td>
             </tr>
@@ -87,17 +103,25 @@
     <div class="less-details my-2">
         <div th:each="product : ${products}" class="row m-1">
             <div class="col-4">
-                <!--                <span th:if="${brand.logo == null}" class="fas fa-portrait fa-2x icon-silver"></span>-->
-                <!--                <img th:unless="${brand.logo == null}" class="img-thumbnail img-fluid"-->
-                <!--                     th:src="@{${brand.logoPath}}" alt="" style="width: 100px;max-height: 200px">-->
+                <img class="img-thumbnail img-fluid"
+                     th:src="@{${product.mainImagePath}}" alt="" style="width: 80px">
             </div>
             <div class="col-8">
-                <div>[[${product.name}]]</div>
-                <div class="mt-2">&nbsp;&nbsp;
-                    <div th:replace="fragments::edit('product', '/products/edit/'+${product.id})"></div>
-                    &nbsp;&nbsp;
-                    <div th:replace="fragments::delete('product',${product.id},'/products/delete/'+${product.id},true)"></div>
+                <div>
+                    <a class="text-decoration-none link-detail"
+                    th:href="@{'/products/detail/'+${product.id}}"
+                    th:title="${product.name}">
+                    [[${product.shortName}]]
+                    </a>
                 </div>
+                <th:block sec:authorize="hasAnyAuthority('Admin','Editor','Salesperson')">
+                    &nbsp;
+                    <div th:replace="fragments::edit('product', '/products/edit/'+${product.id})"></div>
+                </th:block>
+                <th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
+                    &nbsp;
+                    <div th:replace="fragments::delete('product',${product.id},'/products/delete/'+${product.id},true)"></div>
+                </th:block>
             </div>
             <div>&nbsp;</div>
         </div>
