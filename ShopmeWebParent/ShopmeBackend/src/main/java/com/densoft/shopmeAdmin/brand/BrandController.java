@@ -1,14 +1,9 @@
 package com.densoft.shopmeAdmin.brand;
 
-import com.densoft.shopmeAdmin.category.CategoryNotFoundException;
 import com.densoft.shopmeAdmin.category.CategoryService;
-import com.densoft.shopmeAdmin.category.exporter.CategoryCSVExporter;
-import com.densoft.shopmeAdmin.user.UserService;
 import com.densoft.shopmeAdmin.util.FileUpload;
 import com.densoft.shopmecommon.entity.Brand;
 import com.densoft.shopmecommon.entity.Category;
-import com.densoft.shopmecommon.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

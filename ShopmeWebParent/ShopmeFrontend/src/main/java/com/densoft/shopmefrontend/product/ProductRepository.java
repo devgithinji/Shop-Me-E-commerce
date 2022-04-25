@@ -13,4 +13,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             + "ORDER BY p.name ASC"
     )
     Page<Product> listByCategory(Integer categoryId, String categoryIDMatch, Pageable pageable);
+
+
+    Product findByAlias(String alias);
 }

@@ -1,6 +1,7 @@
 package com.densoft.shopmefrontend.product;
 
 import com.densoft.shopmecommon.entity.Product;
+import com.densoft.shopmecommon.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,5 +18,13 @@ public class ProductService {
         String categoryIdMatch = "-" + categoryId + "-";
         Pageable pageable = PageRequest.of(pageNum - 1, PRODUCTS_PER_PAGE);
         return productRepository.listByCategory(categoryId, categoryIdMatch, pageable);
+    }
+
+    public Product getProduct(String alias) throws ProductNotFoundException {
+        Product product = productRepository.findByAlias(alias);
+        if (product == null) {
+            throw new ProductNotFoundException("Could not find any product with alias " + alias);
+        }
+        return product;
     }
 }

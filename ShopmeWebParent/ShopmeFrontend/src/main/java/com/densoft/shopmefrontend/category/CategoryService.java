@@ -1,6 +1,7 @@
 package com.densoft.shopmefrontend.category;
 
 import com.densoft.shopmecommon.entity.Category;
+import com.densoft.shopmecommon.exception.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +26,12 @@ public class CategoryService {
         return listNoChildrenCategories;
     }
 
-    public Category getCategory(String alias) {
-        return categoryRepository.findByAliasAndEnabledTrue(alias);
+    public Category getCategory(String alias) throws CategoryNotFoundException {
+        Category category = categoryRepository.findByAliasAndEnabledTrue(alias);
+        if (category == null) {
+            throw new CategoryNotFoundException("Could not find any category with alias: " + alias);
+        }
+        return category;
     }
 
     public List<Category> getCategoryParents(Category child) {

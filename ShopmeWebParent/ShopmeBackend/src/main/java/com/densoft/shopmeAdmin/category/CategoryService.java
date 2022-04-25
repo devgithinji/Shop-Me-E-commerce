@@ -1,6 +1,7 @@
 package com.densoft.shopmeAdmin.category;
 
 import com.densoft.shopmecommon.entity.Category;
+import com.densoft.shopmecommon.exception.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

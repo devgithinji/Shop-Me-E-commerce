@@ -1,4 +1,4 @@
-package com.densoft.shopmeAdmin.category;
+package com.densoft.shopmecommon.exception;
 
 public class CategoryNotFoundException extends Exception{
 
