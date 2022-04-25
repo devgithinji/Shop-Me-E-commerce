@@ -67,4 +67,11 @@ public class User {
         return "/user-photos/" + this.id + "/" + this.photos;
     }
 
+    public boolean hasRole(String roleName) {
+        for (Role role : roles) {
+            if (role.getName().equals(roleName)) return true;
+        }
+        return false;
+    }
+
 }

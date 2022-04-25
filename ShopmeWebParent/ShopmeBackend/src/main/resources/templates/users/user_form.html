@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments::page_head('User Manage - ShopMe Admin')"></head>
+<head th:replace="fragments::page_head('User Manage - ShopMe Admin','none')"></head>
 <body class="container-fluid">
 <div th:replace="navigation::menu"></div>
 <section>
@@ -76,6 +76,7 @@
         </form>
     </div>
     <script type="text/javascript">
+        let MAX_FILE_SIZE = 102400; //100KB
         let moduleURL = "[[@{/users}]]";
 
         function checkEmailUnique(form) {

@@ -15,9 +15,17 @@
         </button>
         <div class="collapse navbar-collapse" id="topNavbar">
             <ul class="navbar-nav">
-                <li class="nav-item" sec:authorize="hasAuthority('Admin')">
-                    <a class="nav-link" th:href="@{/users}">Users</a>
-                </li>
+                <th:block sec:authorize="hasAnyAuthority('Admin')">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown">
+                            Users
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" th:href="@{/users}">View All</a>
+                            <a class="dropdown-item" th:href="@{/users/new}">Create New</a>
+                        </div>
+                    </li>
+                </th:block>
                 <th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/categories}">Categories</a>
