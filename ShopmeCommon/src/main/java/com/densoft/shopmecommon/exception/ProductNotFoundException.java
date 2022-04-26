@@ -1,4 +1,4 @@
-package com.densoft.shopmeAdmin.product;
+package com.densoft.shopmecommon.exception;
 
 public class ProductNotFoundException extends Exception {
 
