@@ -1,6 +1,7 @@
 package com.densoft.shopmeAdmin.currency;
 
 import com.densoft.shopmecommon.entity.Currency;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -9,6 +10,8 @@ import org.springframework.test.annotation.Rollback;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
 
 
 @DataJpaTest(showSql = false)
@@ -36,5 +39,12 @@ class CurrencyRepositoryTest {
         ));
 
         currencyRepository.saveAll(listCurrencies);
+    }
+
+    @Test
+    public void testListAllOrderByNameAsc() {
+        List<Currency> currencies = currencyRepository.findAllByOrderByNameAsc();
+        currencies.forEach(System.out::println);
+        assertThat(currencies.size()).isGreaterThan(0);
     }
 }

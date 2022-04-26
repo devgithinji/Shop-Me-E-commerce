@@ -1,9 +1,6 @@
 package com.densoft.shopmecommon.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -31,5 +28,10 @@ public class Currency {
         this.name = name;
         this.symbol = symbol;
         this.code = code;
+    }
+
+    @Override
+    public String toString() {
+        return name + " - " + code + " - " + symbol;
     }
 }
