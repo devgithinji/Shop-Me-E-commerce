@@ -7,7 +7,7 @@
         <a class="navbar-brand" th:href="@{/}">
             <img th:src="@{/images/ShopmeAdminSmall.png}" alt="">
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar, #searchNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="topNavbar">
@@ -33,6 +33,19 @@
             </ul>
         </div>
     </nav>
+</div>
+<div th:fragment="search_nav" class="row">
+    <div class="col-md">
+        <nav class="navbar navbar-expand-sm bg-light">
+            <div class="collapse navbar-collapse" id="searchNavbar">
+                <form th:action="@{/search}" class="form-inline" method="get">
+                    <input type="search" th:value="${keyWord}" name="keyWord" class="form-control mr-sm-2"
+                           placeholder="Keyword" required/>
+                    <input type="submit" class="btn btn-outline-success  m-2" value="search"/>
+                </form>
+            </div>
+        </nav>
+    </div>
 </div>
 <div th:fragment="footer_menu">
     <div>

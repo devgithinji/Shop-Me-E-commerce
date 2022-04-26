@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="col-sm-2" th:fragment="content">
+    <div>
+        <a class="text-decoration-none" th:href="@{'/product/'+${product.alias}}">
+            <img th:src="@{${product.mainImagePath}}" style="width: 150px" class="img-fluid img-thumbnail"
+                 alt="">
+            <br>
+            <b>[[${product.shortName}]]</b>
+        </a>
+    </div>
+    <div th:if="${product.discountPercent <= 0}">
+        <span>$ [[${product.price}]]</span>
+    </div>
+    <div th:if="${product.discountPercent > 0}">
+        <span style="font-size: larger; color: darkred" class="mr-2">$ [[${product.discountPrice}]]</span>
+        <br>
+        <del><span>$ [[${product.price}]]</span></del>
+    </div>
+</div>
+</body>
+</html>

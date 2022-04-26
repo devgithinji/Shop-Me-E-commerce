@@ -4,11 +4,12 @@
 <body>
 <div class="container-fluid">
     <div th:replace="navigation::header_menu"></div>
+    <div th:replace="navigation::search_nav"></div>
     <div>
         <h1>Shopping by categories</h1>
     </div>
     <div class="row">
-        <div class="col" th:each="cat :${categories}">
+        <div class="col-sm-2" th:each="cat :${categories}">
             <div><img th:src="@{${cat.imagePath}}" style="width: 80px" alt=""></div>
             <div>
                 <a th:href="@{'/category/'+${cat.alias}}">[[${cat.name}]]</a>

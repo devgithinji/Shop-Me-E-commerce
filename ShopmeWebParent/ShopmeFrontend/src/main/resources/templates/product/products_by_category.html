@@ -4,6 +4,7 @@
 <body>
 <div class="container-fluid">
     <div th:replace="navigation::header_menu"></div>
+    <div th:replace="navigation::search_nav"></div>
     <div th:replace="breadcrumb::content"></div>
     <div class="row text-center my-2">
         <th:block th:each="cat : ${category.children}">
@@ -19,24 +20,7 @@
     <div class="row">&nbsp;</div>
     <div class="row">
         <th:block th:each="product : ${products}">
-            <div class="col">
-                <div>
-                    <a class="text-decoration-none" th:href="@{'/product/'+${product.alias}}">
-                        <img th:src="@{${product.mainImagePath}}" style="width: 150px" class="img-fluid img-thumbnail"
-                             alt="">
-                        <br>
-                        <b>[[${product.shortName}]]</b>
-                    </a>
-                </div>
-                <div th:if="${product.discountPercent <= 0}">
-                    <span>$ [[${product.price}]]</span>
-                </div>
-                <div th:if="${product.discountPercent > 0}">
-                    <span style="font-size: larger; color: darkred" class="mr-2">$ [[${product.discountPrice}]]</span>
-                    <br>
-                    <del><span>$ [[${product.price}]]</span></del>
-                </div>
-            </div>
+            <div th:replace="product/product_item_fragment::content"></div>
         </th:block>
     </div>
     <div th:replace="fragments :: pagination('/category/'+${category.getAlias()},'product')"></div>
