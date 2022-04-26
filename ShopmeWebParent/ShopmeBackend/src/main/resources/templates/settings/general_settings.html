@@ -43,7 +43,7 @@
                     <option value="Before Price" th:selected="(${CURRENCY_SYMBOL_POSITION}  == 'Before Price')">
                         Before Price
                     </option>
-                    <option value="Before Price" th:selected="(${CURRENCY_SYMBOL_POSITION}  == 'After Price')">
+                    <option value="After Price" th:selected="(${CURRENCY_SYMBOL_POSITION}  == 'After Price')">
                         After Price
                     </option>
                 </select>
@@ -66,6 +66,9 @@
             <label class="col-sm-4 col-form-label">Decimal Digits: </label>
             <div class="col-sm-8">
                 <select name="DECIMAL_DIGITS" class="form-control">
+                    <option value="0" th:selected="(${DECIMAL_DIGITS}  == 0)">
+                        0
+                    </option>
                     <option value="1" th:selected="(${DECIMAL_DIGITS}  == 1)">
                         1
                     </option>
