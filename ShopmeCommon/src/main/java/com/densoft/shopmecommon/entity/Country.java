@@ -44,4 +44,8 @@ public class Country {
         this.name = name;
         this.code = code;
     }
+
+    public Country(Integer id) {
+        this.id = id;
+    }
 }
