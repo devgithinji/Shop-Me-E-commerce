@@ -26,7 +26,7 @@ public class Country {
     @Getter(value = AccessLevel.NONE)
     @Setter(value = AccessLevel.NONE)
     @ToString.Exclude
-    @OneToMany(mappedBy = "country")
+    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<State> states;
 
 
