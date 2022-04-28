@@ -11,13 +11,27 @@
         </a>
     </div>
     <div th:if="${product.discountPercent <= 0}">
-        <span>$ [[${product.price}]]</span>
+        <div th:replace="product/product_item_fragment::price_fragment(${product.price})"></div>
     </div>
     <div th:if="${product.discountPercent > 0}">
-        <span style="font-size: larger; color: darkred" class="mr-2">$ [[${product.discountPrice}]]</span>
+        <span style="font-size: larger; color: darkred" class="mr-2">
+            <div th:replace="product/product_item_fragment::price_fragment(${product.discountPrice})"></div>
+        </span>
         <br>
-        <del><span>$ [[${product.price}]]</span></del>
+        <del>
+            <span>
+                <div th:replace="product/product_item_fragment::price_fragment(${product.price})"></div>
+            </span>
+        </del>
     </div>
+</div>
+
+<div th:fragment="price_fragment(price)" th:remove="tag">
+    <span>
+        <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before Price'}" th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>
+        [[${#numbers.formatDecimal(price, 1, THOUSANDS_POINT_TYPE,DECIMAL_DIGITS,DECIMAL_POINT_TYPE)}]]
+        <span th:if="${CURRENCY_SYMBOL_POSITION == 'After Price'}" th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>
+    </span>
 </div>
 </body>
 </html>
