@@ -31,7 +31,7 @@ $(document).ready(function () {
         if (buttonAddCountry.val() === "Add") {
             addCountry();
         } else {
-            changeFormStateToNew();
+            changeFormStateToNewCountry();
         }
 
     })
@@ -51,10 +51,13 @@ function deleteCountry() {
 
     let url = contextPath + "countries/delete/" + countryId;
 
-    $.get(url, function () {
+    $.ajax({
+        type: 'DELETE', url: url, beforeSend: function (xhr) {
+            xhr.setRequestHeader(csrfHeaderName, csrfValue)
+        },
+    }).done(function (countryId) {
         $("#dropDownCountries option[value='" + optionValue + "']").remove();
-        changeFormStateToNew();
-    }).done(function () {
+        changeFormStateToNewCountry();
         showToast("Country has been deleted successfully");
     }).fail(function () {
         showToast("Error: something went wrong");
@@ -80,7 +83,7 @@ function updateCountry() {
         $("#dropDownCountries option:selected").text(countryName);
         showToast("Country has been updated");
 
-        changeFormStateToNew();
+        changeFormStateToNewCountry();
     }).fail(function () {
         showToast("Error: something went wrong");
     });
@@ -116,7 +119,7 @@ function selectNewAddedCountry(countryId, countryCode, countryName) {
     fieldCountryName.val("").focus();
 }
 
-function changeFormStateToNew() {
+function changeFormStateToNewCountry() {
     buttonAddCountry.val("Add");
     labelCountryName.text("Country Name")
     buttonUpdateCountry.prop("disabled", true);
