@@ -91,12 +91,12 @@
                 if (response === "OK") {
                     form.submit();
                 } else if (response === "Duplicated") {
-                    showWarningModal("Warning", "There is another user having the email " + userEmail)
+                    showWarningModal("There is another user having the email " + userEmail)
                 } else {
-                    showErrorModal("Error", "Something went wrong")
+                    showErrorModal("Something went wrong")
                 }
             }).fail(function () {
-                showErrorModal("Error", "Couldn't connect to server")
+                showErrorModal("Couldn't connect to server")
             });
             return false;
         }
