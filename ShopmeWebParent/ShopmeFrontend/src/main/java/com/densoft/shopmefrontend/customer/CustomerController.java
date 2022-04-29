@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -65,5 +66,11 @@ public class CustomerController {
         helper.setText(content, true);
 
         mailSender.send(message);
+    }
+
+    @GetMapping("/verify")
+    public String verifyAccount(@RequestParam("code") String code, Model model) {
+        boolean verified = customerService.verify(code);
+        return "register/" + (verified ? "verify_success" : "verify_fail");
     }
 }
