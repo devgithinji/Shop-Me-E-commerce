@@ -61,4 +61,9 @@ public class Customer {
     @JoinColumn(name = "country_id")
     @ToString.Exclude
     private Country country;
+
+    @Transient
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }
