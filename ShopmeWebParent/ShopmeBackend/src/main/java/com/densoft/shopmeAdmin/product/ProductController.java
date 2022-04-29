@@ -52,7 +52,7 @@ public class ProductController {
             @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
             @RequestParam(value = "keyWord", required = false) String keyWord,
             @RequestParam(value = "categoryId", defaultValue = "0") Integer categoryId) {
-        System.out.println("selected category id: " + categoryId);
+
 
         Page<Product> page = productService.listByPage(pageNum, sortField, sortDir, keyWord, categoryId);
         List<Category> categoryList = categoryService.listCategoriesUsedInForm();
