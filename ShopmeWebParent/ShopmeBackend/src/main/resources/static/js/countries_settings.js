@@ -65,6 +65,7 @@ function deleteCountry() {
 }
 
 function updateCountry() {
+    if (!validateFormCountry()) return;
     let url = contextPath + "countries/save";
     let countryName = fieldCountryName.val();
     let countryCode = fieldCountryCode.val();
@@ -75,9 +76,7 @@ function updateCountry() {
     $.ajax({
         type: 'POST', url: url, beforeSend: function (xhr) {
             xhr.setRequestHeader(csrfHeaderName, csrfValue)
-        },
-        data: JSON.stringify(jsonData),
-        contentType: 'application/json'
+        }, data: JSON.stringify(jsonData), contentType: 'application/json'
     }).done(function (countryId) {
         $("#dropDownCountries option:selected").val(countryId + "-" + countryCode);
         $("#dropDownCountries option:selected").text(countryName);
@@ -89,7 +88,17 @@ function updateCountry() {
     });
 }
 
+function validateFormCountry() {
+    let formCountry = document.getElementById("formCountry");
+    if (!formCountry.checkValidity()) {
+        formCountry.reportValidity();
+        return false;
+    }
+    return true;
+}
+
 function addCountry() {
+    if (!validateFormCountry()) return;
     let url = contextPath + "countries/save";
     let countryName = fieldCountryName.val();
     let countryCode = fieldCountryCode.val();
@@ -99,9 +108,7 @@ function addCountry() {
     $.ajax({
         type: 'POST', url: url, beforeSend: function (xhr) {
             xhr.setRequestHeader(csrfHeaderName, csrfValue)
-        },
-        data: JSON.stringify(jsonData),
-        contentType: 'application/json'
+        }, data: JSON.stringify(jsonData), contentType: 'application/json'
     }).done(function (countryId) {
         selectNewAddedCountry(countryId, countryCode, countryName)
         showToast("A new country has been added");

@@ -125,6 +125,7 @@ function addState() {
 
 }
 
+
 function validateFormState() {
     let formState = document.getElementById("formState");
     if (!formState.checkValidity()) {
