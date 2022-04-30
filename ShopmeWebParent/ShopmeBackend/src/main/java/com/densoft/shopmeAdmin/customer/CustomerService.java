@@ -1,5 +1,6 @@
 package com.densoft.shopmeAdmin.customer;
 
+import com.densoft.shopmeAdmin.paging.PagingAndSortingHelper;
 import com.densoft.shopmecommon.entity.Customer;
 import com.densoft.shopmecommon.exception.CustomerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,17 +23,16 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    public Page<Customer> listByPage(int pageNum, String sortField, String sortDir, String keyWord) {
+    public List<Customer> listAll() {
+        return customerRepository.findAll();
+    }
 
-        Sort sort = Sort.by(sortField);
-        sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? sort.ascending() : sort.descending();
 
-        Pageable pageable = PageRequest.of(pageNum - 1, CUSTOMERS_PER_PAGE, sort);
-        if (keyWord != null) {
-            return customerRepository.findAll(keyWord, pageable);
-        }
-        return customerRepository.findAll(pageable);
+    public void listByPage(int pageNum, PagingAndSortingHelper helper) {
+        helper.listEntities(pageNum, CUSTOMERS_PER_PAGE, customerRepository);
     }
 
     public void updateCustomerEnabledStatus(Integer id, boolean enabled) throws CustomerNotFoundException {
@@ -70,13 +72,29 @@ public class CustomerService {
 
     public void delete(Integer id) throws CustomerNotFoundException {
         Optional<Customer> optionalCustomer = customerRepository.findById(id);
-        if (optionalCustomer.isPresent()) {
-            customerRepository.delete(optionalCustomer.get());
-        }
+        optionalCustomer.ifPresent(customer -> customerRepository.delete(customer));
         throw new CustomerNotFoundException("Customer with ID: " + id + " not found");
     }
 
     public void save(Customer customer) {
+        Customer existingCustomer = customerRepository.findById(customer.getId()).get();
+
+        if (customer.getPassword().isEmpty() || customer.getPassword() == null) {
+            customer.setPassword(existingCustomer.getPassword());
+        } else {
+            encodePassword(customer);
+        }
+
+        customer.setVerificationCode(existingCustomer.getVerificationCode());
+        customer.setEnabled(existingCustomer.isEnabled());
+        customer.setCreatedTime(existingCustomer.getCreatedTime());
+
         customerRepository.save(customer);
+    }
+
+
+    private void encodePassword(Customer customer) {
+        String encodedPassword = passwordEncoder.encode(customer.getPassword());
+        customer.setPassword(encodedPassword);
     }
 }

@@ -12,11 +12,12 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+
     @Column(nullable = false, length = 45, unique = true)
     private String name;
     @Column(nullable = false, length = 128)
@@ -52,5 +53,10 @@ public class Brand {
     public String getLogoPath() {
         if (this.id == null) return "/images/image-thumbnail.png";
         return "/brand-logos/" + this.id + "/" + this.logo;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

@@ -1,5 +1,6 @@
 package com.densoft.shopmeAdmin.customer;
 
+import com.densoft.shopmeAdmin.paging.SearchRepository;
 import com.densoft.shopmecommon.entity.Customer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface CustomerRepository extends JpaRepository<Customer, Integer> {
+public interface CustomerRepository extends SearchRepository<Customer, Integer> {
 
     @Query("SELECT c FROM Customer c WHERE c.firstName LIKE %?1% "
             + "OR c.lastName LIKE %?1% "

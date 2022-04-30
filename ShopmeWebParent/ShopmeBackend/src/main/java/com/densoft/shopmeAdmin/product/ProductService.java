@@ -1,5 +1,6 @@
 package com.densoft.shopmeAdmin.product;
 
+import com.densoft.shopmeAdmin.paging.PagingAndSortingHelper;
 import com.densoft.shopmecommon.entity.Product;
 import com.densoft.shopmecommon.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,25 +25,28 @@ public class ProductService {
     }
 
 
-    public Page<Product> listByPage(int pageNum, String sortField, String sortDir, String keyWord, Integer categoryId) {
-        Sort sort = Sort.by(sortField);
+    public void listByPage(int pageNum, PagingAndSortingHelper helper, Integer categoryId) {
 
-        sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? sort.ascending() : sort.descending();
+        Pageable pageable = helper.createPageable(PRODUCTS_PER_PAGE, pageNum);
+        String keyWord = helper.getKeyWord();
+        Page<Product> page = null;
 
-        Pageable pageable = PageRequest.of(pageNum - 1, PRODUCTS_PER_PAGE, sort);
         if (keyWord != null && !keyWord.isEmpty()) {
             if (categoryId != null && categoryId > 0) {
                 String categoryIdMatch = "-" + categoryId + "-";
-                return productRepository.searchInCategory(categoryId, categoryIdMatch, keyWord, pageable);
+                page = productRepository.searchInCategory(categoryId, categoryIdMatch, keyWord, pageable);
+            } else {
+                page = productRepository.findAll(keyWord, pageable);
             }
-            return productRepository.findAll(keyWord, pageable);
+        } else {
+            if (categoryId != null && categoryId > 0) {
+                String categoryIdMatch = "-" + categoryId + "-";
+                page = productRepository.findAllInCategory(categoryId, categoryIdMatch, pageable);
+            } else {
+                page = productRepository.findAll(pageable);
+            }
         }
-
-        if (categoryId != null && categoryId > 0) {
-            String categoryIdMatch = "-" + categoryId + "-";
-            return productRepository.findAllInCategory(categoryId, categoryIdMatch, pageable);
-        }
-        return productRepository.findAll(pageable);
+        helper.updateModelAttributes(pageNum, page);
     }
 
     public Product save(Product product) {

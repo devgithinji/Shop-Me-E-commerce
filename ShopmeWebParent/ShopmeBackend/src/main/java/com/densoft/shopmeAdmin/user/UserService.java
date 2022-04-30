@@ -1,5 +1,6 @@
 package com.densoft.shopmeAdmin.user;
 
+import com.densoft.shopmeAdmin.paging.PagingAndSortingHelper;
 import com.densoft.shopmeAdmin.user.exception.UserNotFoundException;
 import com.densoft.shopmecommon.entity.Role;
 import com.densoft.shopmecommon.entity.User;
@@ -43,16 +44,8 @@ public class UserService {
         return userRepository.findAll(Sort.by("firstName").ascending());
     }
 
-    public Page<User> listByPage(int pageNum, String sortField, String sortDir, String keyWord) {
-        Sort sort = Sort.by(sortField);
-
-        sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? sort.ascending() : sort.descending();
-
-        Pageable pageable = PageRequest.of(pageNum - 1, USERS_PER_PAGE, sort);
-        if (keyWord != null) {
-            return userRepository.findAll(keyWord, pageable);
-        }
-        return userRepository.findAll(pageable);
+    public void listByPage(int pageNum, PagingAndSortingHelper helper) {
+        helper.listEntities(pageNum, USERS_PER_PAGE, userRepository);
     }
 
     public List<Role> listRoles() {

@@ -1,7 +1,11 @@
 package com.densoft.shopmeAdmin.customer;
 
+import com.densoft.shopmeAdmin.brand.BrandCSVExporter;
+import com.densoft.shopmeAdmin.paging.PagingAndSortingHelper;
+import com.densoft.shopmeAdmin.paging.PagingAndSortingParam;
 import com.densoft.shopmeAdmin.setting.country.CountryRepository;
 import com.densoft.shopmeAdmin.util.FileUpload;
+import com.densoft.shopmecommon.entity.Brand;
 import com.densoft.shopmecommon.entity.Country;
 import com.densoft.shopmecommon.entity.Customer;
 import com.densoft.shopmecommon.entity.Product;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -31,36 +36,16 @@ public class CustomerController {
 
     @GetMapping("/customers")
     public String listFirstPage(Model model) {
-        return listByPage(1, model, "firstName", "asc", null);
+        return "redirect:/customers/page/1?sortField=firstName&sortDir=asc";
     }
 
 
     @GetMapping("/customers/page/{pageNum}")
-    public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model, @RequestParam(value = "sortField", defaultValue = "firstName") String sortField, @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir, @RequestParam(value = "keyWord", required = false) String keyWord) {
+    public String listByPage(
+            @PagingAndSortingParam(listName = "customers", moduleURL = "/customers") PagingAndSortingHelper helper,
+            @PathVariable(name = "pageNum") int pageNum) {
 
-
-        Page<Customer> page = customerService.listByPage(pageNum, sortField, sortDir, keyWord);
-        List<Customer> customers = page.getContent();
-        long startCount = (long) (pageNum - 1) * CustomerService.CUSTOMERS_PER_PAGE + 1;
-        long endCount = startCount + CustomerService.CUSTOMERS_PER_PAGE - 1;
-
-        if (endCount > page.getTotalElements()) {
-            endCount = page.getTotalElements();
-        }
-
-        String reverseSortDir = sortDir.equalsIgnoreCase("asc") ? "desc" : "asc";
-
-        model.addAttribute("currentPage", pageNum);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("startCount", startCount);
-        model.addAttribute("endCount", endCount);
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("sortField", sortField);
-        model.addAttribute("sortDir", sortDir);
-        model.addAttribute("customers", customers);
-        model.addAttribute("reverseSortDir", reverseSortDir);
-        model.addAttribute("keyWord", keyWord);
-
+        customerService.listByPage(pageNum, helper);
         return "customer/customers";
     }
 
@@ -127,5 +112,13 @@ public class CustomerController {
         }
 
         return "redirect:/customers";
+    }
+
+
+    @GetMapping("/customers/export/csv")
+    public void exportToCSV(HttpServletResponse response) throws Exception {
+        List<Customer> customerList = customerService.listAll();
+        CustomerCSVExporter customerCSVExporter = new CustomerCSVExporter();
+        customerCSVExporter.export(customerList, response);
     }
 }
