@@ -1,5 +1,6 @@
 package com.densoft.shopmeAdmin.user;
 
+import com.densoft.shopmeAdmin.paging.SearchRepository;
 import com.densoft.shopmecommon.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends SearchRepository<User, Integer> {
     Optional<User> findByEmail(String email);
 
     Long countById(Integer id);

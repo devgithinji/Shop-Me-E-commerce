@@ -2,10 +2,14 @@ package com.densoft.shopmeAdmin.product;
 
 import com.densoft.shopmeAdmin.brand.BrandService;
 import com.densoft.shopmeAdmin.category.CategoryService;
+import com.densoft.shopmeAdmin.customer.CustomerCSVExporter;
+import com.densoft.shopmeAdmin.paging.PagingAndSortingHelper;
+import com.densoft.shopmeAdmin.paging.PagingAndSortingParam;
 import com.densoft.shopmeAdmin.security.CustomUserDetails;
 import com.densoft.shopmeAdmin.util.FileUpload;
 import com.densoft.shopmecommon.entity.Brand;
 import com.densoft.shopmecommon.entity.Category;
+import com.densoft.shopmecommon.entity.Customer;
 import com.densoft.shopmecommon.entity.Product;
 import com.densoft.shopmecommon.exception.ProductNotFoundException;
 import org.springframework.data.domain.Page;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 ;
@@ -41,42 +46,23 @@ public class ProductController {
 
     @GetMapping("/products")
     public String listFirstPage(Model model) {
-        return listByPage(1, model, "name", "asc", null, 0);
+        return "redirect:/products/page/1?sortField=name&sortDir=asc&categoryId=0";
     }
 
 
     @GetMapping("/products/page/{pageNum}")
     public String listByPage(
+            @PagingAndSortingParam(listName = "products", moduleURL = "/products") PagingAndSortingHelper helper,
             @PathVariable(name = "pageNum") int pageNum,
-            Model model, @RequestParam(value = "sortField", defaultValue = "name") String sortField,
-            @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
-            @RequestParam(value = "keyWord", required = false) String keyWord,
+            Model model,
             @RequestParam(value = "categoryId", defaultValue = "0") Integer categoryId) {
-        System.out.println("selected category id: " + categoryId);
 
-        Page<Product> page = productService.listByPage(pageNum, sortField, sortDir, keyWord, categoryId);
+
+        productService.listByPage(pageNum, helper, categoryId);
+
         List<Category> categoryList = categoryService.listCategoriesUsedInForm();
-        List<Product> products = page.getContent();
-        long startCount = (long) (pageNum - 1) * ProductService.PRODUCTS_PER_PAGE + 1;
-        long endCount = startCount + ProductService.PRODUCTS_PER_PAGE - 1;
-        if (endCount > page.getTotalElements()) {
-            endCount = page.getTotalElements();
-        }
-
-        String reverseSortDir = sortDir.equalsIgnoreCase("asc") ? "desc" : "asc";
 
         if (categoryId != null) model.addAttribute("categoryId", categoryId);
-
-        model.addAttribute("currentPage", pageNum);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("startCount", startCount);
-        model.addAttribute("endCount", endCount);
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("sortField", sortField);
-        model.addAttribute("sortDir", sortDir);
-        model.addAttribute("products", products);
-        model.addAttribute("reverseSortDir", reverseSortDir);
-        model.addAttribute("keyWord", keyWord);
         model.addAttribute("listCategories", categoryList);
         return "products/products";
     }
@@ -119,14 +105,16 @@ public class ProductController {
             RedirectAttributes redirectAttributes,
             @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
 
-        if (userDetails.hasRole("SalesPerson")) {
-            try {
-                productService.saveProductPrice(product);
-                redirectAttributes.addFlashAttribute("message", "The product saved successfully");
-            } catch (ProductNotFoundException e) {
-                redirectAttributes.addFlashAttribute("message", e.getMessage());
+        if (!userDetails.hasRole("Admin") && !userDetails.hasRole("Editor")) {
+            if (userDetails.hasRole("Salesperson")) {
+                try {
+                    productService.saveProductPrice(product);
+                    redirectAttributes.addFlashAttribute("message", "The product saved successfully");
+                } catch (ProductNotFoundException e) {
+                    redirectAttributes.addFlashAttribute("message", e.getMessage());
+                }
+                return "redirect:/products";
             }
-            return "redirect:/products";
         }
 
         setMainImageName(mainImageMultipartFile, product);
@@ -197,6 +185,14 @@ public class ProductController {
             return "redirect:/products";
         }
 
+    }
+
+
+    @GetMapping("/products/export/csv")
+    public void exportToCSV(HttpServletResponse response) throws Exception {
+        List<Product> productList = productService.listAll();
+        ProductCSVExporter productCSVExporter = new ProductCSVExporter();
+        productCSVExporter.export(productList, response);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.densoft.shopmeAdmin.brand;
 
+import com.densoft.shopmeAdmin.paging.PagingAndSortingHelper;
 import com.densoft.shopmecommon.entity.Brand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,15 +26,8 @@ public class BrandService {
     }
 
 
-    public Page<Brand> listByPage(int pageNum, String sortField, String sortDir, String keyWord) {
-        Sort sort = Sort.by(sortField);
-        sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? sort.ascending() : sort.descending();
-
-        Pageable pageable = PageRequest.of(pageNum - 1, BRANDS_PER_PAGE, sort);
-        if (keyWord != null) {
-            return brandRepository.findAll(keyWord, pageable);
-        }
-        return brandRepository.findAll(pageable);
+    public void listByPage(int pageNum, PagingAndSortingHelper helper) {
+        helper.listEntities(pageNum, BRANDS_PER_PAGE, brandRepository);
     }
 
 

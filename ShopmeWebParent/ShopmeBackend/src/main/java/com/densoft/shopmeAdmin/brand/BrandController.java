@@ -1,6 +1,8 @@
 package com.densoft.shopmeAdmin.brand;
 
 import com.densoft.shopmeAdmin.category.CategoryService;
+import com.densoft.shopmeAdmin.paging.PagingAndSortingHelper;
+import com.densoft.shopmeAdmin.paging.PagingAndSortingParam;
 import com.densoft.shopmeAdmin.util.FileUpload;
 import com.densoft.shopmecommon.entity.Brand;
 import com.densoft.shopmecommon.entity.Category;
@@ -33,32 +35,16 @@ public class BrandController {
 
 
     @GetMapping("/brands")
-    public String brandsList(Model model) {
-        return listByPage(1, model, "name", "asc", null);
+    public String brandsList() {
+        return "redirect:/brands/page/1?sortField=name&sortDir=asc";
     }
 
     @GetMapping("/brands/page/{pageNum}")
-    public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model, @RequestParam(value = "sortField", defaultValue = "name") String sortField, @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir, @RequestParam(value = "keyWord", required = false) String keyWord) {
-        Page<Brand> page = brandService.listByPage(pageNum, sortField, sortDir, keyWord);
-        List<Brand> brands = page.getContent();
-        long startCount = (long) (pageNum - 1) * BrandService.BRANDS_PER_PAGE + 1;
-        long endCount = startCount + BrandService.BRANDS_PER_PAGE - 1;
-        if (endCount > page.getTotalElements()) {
-            endCount = page.getTotalElements();
-        }
+    public String listByPage(
+            @PagingAndSortingParam(listName = "brands", moduleURL = "/brands") PagingAndSortingHelper helper,
+            @PathVariable(name = "pageNum") int pageNum) {
+        brandService.listByPage(pageNum, helper);
 
-        String reverseSortDir = sortDir.equalsIgnoreCase("asc") ? "desc" : "asc";
-
-        model.addAttribute("currentPage", pageNum);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("startCount", startCount);
-        model.addAttribute("endCount", endCount);
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("sortField", sortField);
-        model.addAttribute("sortDir", sortDir);
-        model.addAttribute("brands", brands);
-        model.addAttribute("reverseSortDir", reverseSortDir);
-        model.addAttribute("keyWord", keyWord);
         return "brands/brands";
     }
 

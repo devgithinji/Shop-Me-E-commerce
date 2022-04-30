@@ -1,5 +1,7 @@
 package com.densoft.shopmeAdmin.user.controller;
 
+import com.densoft.shopmeAdmin.paging.PagingAndSortingHelper;
+import com.densoft.shopmeAdmin.paging.PagingAndSortingParam;
 import com.densoft.shopmeAdmin.user.exception.UserNotFoundException;
 import com.densoft.shopmeAdmin.user.UserService;
 import com.densoft.shopmeAdmin.user.export.UserCsvExporter;
@@ -32,32 +34,17 @@ public class UserController {
 
 
     @GetMapping("/users")
-    public String getUsers(Model model) {
-        return listByPage(1, model, "firstName", "asc", null);
+    public String getUsers() {
+
+        return "redirect:/users/page/1?sortField=firstName&sortDir=asc";
     }
 
     @GetMapping("/users/page/{pageNum}")
-    public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model, @RequestParam(value = "sortField", defaultValue = "firstName") String sortField, @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir, @RequestParam(value = "keyWord", required = false) String keyWord) {
-        Page<User> page = userService.listByPage(pageNum, sortField, sortDir, keyWord);
-        List<User> users = page.getContent();
-        long startCount = (long) (pageNum - 1) * UserService.USERS_PER_PAGE + 1;
-        long endCount = startCount + UserService.USERS_PER_PAGE - 1;
-        if (endCount > page.getTotalElements()) {
-            endCount = page.getTotalElements();
-        }
+    public String listByPage(
+            @PagingAndSortingParam(listName = "users", moduleURL = "/users") PagingAndSortingHelper helper,
+            @PathVariable(name = "pageNum") int pageNum) {
+        userService.listByPage(pageNum, helper);
 
-        String reverseSortDir = sortDir.equalsIgnoreCase("asc") ? "desc" : "asc";
-
-        model.addAttribute("currentPage", pageNum);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("startCount", startCount);
-        model.addAttribute("endCount", endCount);
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("sortField", sortField);
-        model.addAttribute("sortDir", sortDir);
-        model.addAttribute("users", users);
-        model.addAttribute("reverseSortDir", reverseSortDir);
-        model.addAttribute("keyWord", keyWord);
         return "users/users";
     }
 
