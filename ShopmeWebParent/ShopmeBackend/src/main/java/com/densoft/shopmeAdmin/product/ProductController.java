@@ -150,12 +150,22 @@ public class ProductController {
     public String editProduct(
             @PathVariable("id") Integer id,
             Model model,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
             Product product = productService.get(id);
             model.addAttribute("pageTitle", "Edit Product (ID: " + id + ")");
-
             List<Brand> brands = brandService.listAll();
+
+            boolean isReadOnlyForSalesPerson = false;
+
+            if (!userDetails.hasRole("Admin") && !userDetails.hasRole("Editor")) {
+                if (userDetails.hasRole("Salesperson")) {
+                    isReadOnlyForSalesPerson = true;
+                }
+            }
+
+            model.addAttribute("isReadOnlyForSalesPerson", isReadOnlyForSalesPerson);
             model.addAttribute("brands", brands);
             model.addAttribute("product", product);
             Integer numberOfExistingExtraImages = product.getImages().size();
