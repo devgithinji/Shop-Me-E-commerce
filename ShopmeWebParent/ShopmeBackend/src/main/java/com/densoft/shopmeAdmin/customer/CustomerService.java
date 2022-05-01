@@ -88,6 +88,8 @@ public class CustomerService {
         customer.setVerificationCode(existingCustomer.getVerificationCode());
         customer.setEnabled(existingCustomer.isEnabled());
         customer.setCreatedTime(existingCustomer.getCreatedTime());
+        customer.setAuthenticationType(existingCustomer.getAuthenticationType());
+        customer.setResetPasswordToken(existingCustomer.getResetPasswordToken());
 
         customerRepository.save(customer);
     }

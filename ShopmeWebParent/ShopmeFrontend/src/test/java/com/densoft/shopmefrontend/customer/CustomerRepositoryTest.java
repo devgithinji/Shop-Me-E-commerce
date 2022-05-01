@@ -1,5 +1,6 @@
 package com.densoft.shopmefrontend.customer;
 
+import com.densoft.shopmecommon.entity.AuthenticationType;
 import com.densoft.shopmecommon.entity.Country;
 import com.densoft.shopmecommon.entity.Customer;
 import org.junit.jupiter.api.Test;
@@ -131,6 +132,14 @@ class CustomerRepositoryTest {
         Customer savedCustomer = customerRepository.save(customer);
 
         assertThat(savedCustomer.isEnabled()).isTrue();
+    }
+
+    @Test
+    public void testUpdateAuthenticationType() {
+        Integer id = 1;
+        Customer customer = customerRepository.findById(id).get();
+        assertThat(customer.getAuthenticationType()).isEqualTo(AuthenticationType.DATABASE);
+
     }
 
 

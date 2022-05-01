@@ -8,4 +8,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
     Customer findByVerificationCode(String code);
 
+    Customer findByResetPasswordToken(String token);
+
 }
