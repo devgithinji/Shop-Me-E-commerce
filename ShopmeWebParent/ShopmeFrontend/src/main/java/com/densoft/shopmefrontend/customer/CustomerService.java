@@ -3,6 +3,7 @@ package com.densoft.shopmefrontend.customer;
 import com.densoft.shopmecommon.entity.AuthenticationType;
 import com.densoft.shopmecommon.entity.Country;
 import com.densoft.shopmecommon.entity.Customer;
+import com.densoft.shopmecommon.exception.CustomerNotFoundException;
 import com.densoft.shopmefrontend.setting.CountryRepository;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,6 +122,33 @@ public class CustomerService {
         customer.setAuthenticationType(existingCustomer.getAuthenticationType());
         customer.setResetPasswordToken(existingCustomer.getResetPasswordToken());
 
+        customerRepository.save(customer);
+    }
+
+    public String updateResetPasswordToken(String email) throws CustomerNotFoundException {
+        Customer customer = customerRepository.findByEmail(email);
+        if (customer != null) {
+            String token = RandomString.make(30);
+            customer.setResetPasswordToken(token);
+            customerRepository.save(customer);
+            return token;
+        } else {
+            throw new CustomerNotFoundException("Could not find any customer with the email: " + email);
+        }
+    }
+
+    public Customer getByResetPasswordToken(String token) {
+        return customerRepository.findByResetPasswordToken(token);
+    }
+
+    public void updatePassword(String token, String newPassword) throws CustomerNotFoundException {
+        Customer customer = customerRepository.findByResetPasswordToken(token);
+        if (customer == null) {
+            throw new CustomerNotFoundException("Invalid token");
+        }
+        customer.setPassword(newPassword);
+        customer.setResetPasswordToken(null);
+        encodePassword(customer);
         customerRepository.save(customer);
     }
 }

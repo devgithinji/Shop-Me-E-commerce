@@ -2,6 +2,7 @@ package com.densoft.shopmefrontend.customer;
 
 import com.densoft.shopmecommon.entity.Country;
 import com.densoft.shopmecommon.entity.Customer;
+import com.densoft.shopmecommon.exception.CustomerNotFoundException;
 import com.densoft.shopmefrontend.Utility;
 import com.densoft.shopmefrontend.security.CustomerOAuth2User;
 import com.densoft.shopmefrontend.security.CustomerUserDetails;
@@ -99,7 +100,6 @@ public class CustomerController {
             CustomerOAuth2User auth2User = (CustomerOAuth2User) oAuth2AuthenticationToken.getPrincipal();
             customerEmail = auth2User.getEmail();
         }
-
         return customerEmail;
     }
 
@@ -139,5 +139,35 @@ public class CustomerController {
         }
 
         return userDetails;
+    }
+
+    @GetMapping("/reset_password")
+    public String showResetForm(@RequestParam("token") String token, Model model) {
+        Customer customer = customerService.getByResetPasswordToken(token);
+        if (customer != null) {
+            model.addAttribute("token", token);
+        } else {
+            model.addAttribute("pageTitle", "Invalid Token");
+            model.addAttribute("message", "invalid token");
+            return "message";
+        }
+        return "customer/reset_password_form";
+    }
+
+    @PostMapping("/reset_password")
+    public String processResetForm(HttpServletRequest request, Model model) {
+        String token = request.getParameter("token");
+        String password = request.getParameter("password");
+        try {
+            customerService.updatePassword(token, password);
+            model.addAttribute("pageTitle", "Reset Your Password");
+            model.addAttribute("title", "Reset Your Password");
+            model.addAttribute("message", "You have successfully changed your password");
+            return "message";
+        } catch (CustomerNotFoundException e) {
+            model.addAttribute("pageTitle", "Invalid Token");
+            model.addAttribute("message", e.getMessage());
+            return "message";
+        }
     }
 }
