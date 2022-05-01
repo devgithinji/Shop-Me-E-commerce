@@ -62,6 +62,13 @@ public class Customer {
     @ToString.Exclude
     private Country country;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "authentication_type", length = 10)
+    private AuthenticationType authenticationType;
+
+    @Column(name = "reset_password_token", length = 30)
+    private String resetPasswordToken;
+
     @Transient
     public String getFullName() {
         return firstName + " " + lastName;
