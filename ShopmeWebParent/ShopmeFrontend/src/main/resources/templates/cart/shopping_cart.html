@@ -11,16 +11,17 @@
     <div class="row m-1">
         <div class="col-sm-8">
             <th:block th:each="item, status: ${cartItems}">
-                <div class="row border rounded p-1 m-2" th:with="product = ${item.product}" th:id="${status.count}">
+                <div class="row border rounded p-1 m-2" th:with="product = ${item.product}"
+                     th:id="'row'+${status.count}">
                     <div class="col-1">
-                        <div>[[${status.count}]]</div>
+                        <div class="divCount">[[${status.count}]]</div>
                         <div>
-                            <a class="fas fa-trash icon-dark linkRemove" th:rowNumber="${status.count}"
+                            <a class="fas fa-trash text-danger linkRemove" th:rowNumber="${status.count}"
                                th:href="@{'/cart/remove/' + ${product.id}}"></a>
                         </div>
                     </div>
                     <div class="col-3">
-                        <img th:src="@{${product.mainImagePath}}" class="img-fluid" alt="">
+                        <img th:src="@{${product.mainImagePath}}" class="img-fluid" alt="" style="max-height: 150px">
                     </div>
                     <div class="col-6">
                         <div>
@@ -38,7 +39,7 @@
                             <span>=&nbsp;</span>
                             <span>
                                 <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before Price'}" th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>
-                                <span class="h4">[[${#numbers.formatDecimal(item.subTotal, 1, THOUSANDS_POINT_TYPE,DECIMAL_DIGITS,DECIMAL_POINT_TYPE)}]]</span>
+                                <span th:id="'subTotal'+${product.id}" class="h4 subtotal">[[${#numbers.formatDecimal(item.subTotal, 1, THOUSANDS_POINT_TYPE,DECIMAL_DIGITS,DECIMAL_POINT_TYPE)}]]</span>
                                 <span th:if="${CURRENCY_SYMBOL_POSITION == 'After Price'}" th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>
                             </span>
                         </div>
@@ -46,13 +47,13 @@
                 </div>
             </th:block>
         </div>
-        <div class="col-sm-4" th:unless="${#lists.isEmpty(cartItems)}">
+        <div class="col-sm-4" th:unless="${#lists.isEmpty(cartItems)}" id="sectionTotal">
             <span class="h3">Estimated Total</span>
             <div class="mt-2">
                 <span>
                      <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before Price'}"
                            th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>
-                    <span class="h3">[[${#numbers.formatDecimal(estimatedTotal, 1, THOUSANDS_POINT_TYPE,DECIMAL_DIGITS,DECIMAL_POINT_TYPE)}]]</span>
+                    <span id="total" class="h3">[[${#numbers.formatDecimal(estimatedTotal, 1, THOUSANDS_POINT_TYPE,DECIMAL_DIGITS,DECIMAL_POINT_TYPE)}]]</span>
                     <span th:if="${CURRENCY_SYMBOL_POSITION == 'After Price'}"
                           th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>
                 </span>
@@ -62,10 +63,25 @@
             </div>
         </div>
     </div>
-    <div class="p-3" th:if="${#lists.isEmpty(cartItems)}">
-        <h3 class="text-center">Your cart is empty</h3>
+
+    <div id="sectionEmptyCartMessage" th:class="'text-center my-3' + ${#lists.isEmpty(cartItems) ? '' : ' d-none'}">
+        <h3>Your cart is empty.</h3>
     </div>
+
+    <div th:replace="fragments::modal_dialog"></div>
     <div th:replace="navigation::footer_menu"></div>
 </div>
+<script type="text/javascript">
+    let contextPath = "[[@{/}]]";
+    let csrfHeaderName = "[[${_csrf.headerName}]]";
+    let csrfValue = "[[${_csrf.token}]]";
+
+    let decimalDigits = [[${DECIMAL_DIGITS}]];
+    let decimalPointType = "[[${DECIMAL_POINT_TYPE}]]";
+    let thousandsPointType = "[[${THOUSANDS_POINT_TYPE}]]";
+</script>
+<script th:src="@{/js/jquery.number.min.js}"></script>
+<script th:src="@{/js/shopping_cart.js}"></script>
+<script th:src="@{/js/common_modal.js}"></script>
 </body>
 </html>
