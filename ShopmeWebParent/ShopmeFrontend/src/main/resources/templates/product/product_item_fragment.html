@@ -10,20 +10,24 @@
             <b>[[${product.shortName}]]</b>
         </a>
     </div>
-    <div th:if="${product.discountPercent <= 0}">
+    <div th:replace="product/product_item_fragment::product_price"></div>
+</div>
+
+<div th:fragment="product_price" th:remove="tag">
+    <th:block th:if="${product.discountPercent <= 0}">
         <div th:replace="product/product_item_fragment::price_fragment(${product.price})"></div>
-    </div>
-    <div th:if="${product.discountPercent > 0}">
-        <span style="font-size: larger; color: darkred" class="mr-2">
-            <div th:replace="product/product_item_fragment::price_fragment(${product.discountPrice})"></div>
-        </span>
-        <br>
+    </th:block>
+    <th:block th:if="${product.discountPercent > 0}">
         <del>
             <span>
                 <div th:replace="product/product_item_fragment::price_fragment(${product.price})"></div>
             </span>
         </del>
-    </div>
+        &nbsp;
+        <span style="font-size: larger; color: darkred" class="mr-2">
+            <div th:replace="product/product_item_fragment::price_fragment(${product.discountPrice})"></div>
+        </span>
+    </th:block>
 </div>
 
 <div th:fragment="price_fragment(price)" th:remove="tag">
