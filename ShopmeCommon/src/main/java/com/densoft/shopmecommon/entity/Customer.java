@@ -73,4 +73,8 @@ public class Customer {
     public String getFullName() {
         return firstName + " " + lastName;
     }
+
+    public Customer(Integer id) {
+        this.id = id;
+    }
 }
