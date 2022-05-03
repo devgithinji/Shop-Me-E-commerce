@@ -9,13 +9,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 @Service
 public class OrderService {
 
     private static final int ORDERS_PER_PAGE = 10;
 
     @Autowired
-    private OrderRepository repo;
+    private OrderRepository orderRepository;
 
     public void listByPage(int pageNum, PagingAndSortingHelper helper) {
         String sortField = helper.getSortField();
@@ -36,11 +39,29 @@ public class OrderService {
         Page<Order> page = null;
 
         if (keyword != null) {
-            page = repo.findAll(keyword, pageable);
+            page = orderRepository.findAll(keyword, pageable);
         } else {
-            page = repo.findAll(pageable);
+            page = orderRepository.findAll(pageable);
         }
 
         helper.updateModelAttributes(pageNum, page);
+    }
+
+    public Order get(Integer id) throws OrderNotFoundException {
+        try {
+            return orderRepository.findById(id).get();
+        } catch (NoSuchElementException ex) {
+            throw new OrderNotFoundException("Could not find any orders with ID " + id);
+        }
+    }
+
+    public void delete(Integer id) throws OrderNotFoundException {
+        Optional<Order> optionalOrder = orderRepository.findById(id);
+
+        if (optionalOrder.isEmpty()) {
+            throw new OrderNotFoundException("Could not find any orders with ID " + id);
+        }
+
+        orderRepository.deleteById(id);
     }
 }
