@@ -1,28 +1,19 @@
 package com.densoft.shopmecommon.entity;
 
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+
 
 @Entity
-@Table(name = "customers")
+@Table(name = "addresses")
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
-public class Customer {
+public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Column(nullable = false, unique = true, length = 45)
-    private String email;
-
-    @Column(nullable = false, length = 64)
-    private String password;
 
     @Column(name = "first_name", nullable = false, length = 45)
     private String firstName;
@@ -48,38 +39,19 @@ public class Customer {
     @Column(name = "postal_code", nullable = false, length = 10)
     private String postalCode;
 
-    @Column(name = "verification_code", length = 64)
-    private String verificationCode;
-
-    private boolean enabled;
-
-    @Column(name = "created_time")
-    @CreationTimestamp
-    private Date createdTime;
-
     @ManyToOne
     @JoinColumn(name = "country_id")
-    @ToString.Exclude
     private Country country;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "authentication_type", length = 10)
-    private AuthenticationType authenticationType;
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
-    @Column(name = "reset_password_token", length = 30)
-    private String resetPasswordToken;
+    @Column(name = "default_address")
+    private boolean defaultForShipping;
 
-    @Transient
-    public String getFullName() {
-        return firstName + " " + lastName;
-    }
-
-    public Customer(Integer id) {
-        this.id = id;
-    }
-
-    @Transient
-    public String getAddress() {
+    @Override
+    public String toString() {
         String address = firstName;
 
         if (lastName != null && !lastName.isEmpty()) address += " " + lastName;
@@ -98,6 +70,5 @@ public class Customer {
         if (!phoneNumber.isEmpty()) address += ". Phone Number: " + phoneNumber;
 
         return address;
-
     }
 }
