@@ -1,7 +1,7 @@
 package com.densoft.shopmefrontend.product;
 
 import com.densoft.shopmecommon.entity.Category;
-import com.densoft.shopmecommon.entity.Product;
+import com.densoft.shopmecommon.entity.product.Product;
 import com.densoft.shopmecommon.exception.CategoryNotFoundException;
 import com.densoft.shopmecommon.exception.ProductNotFoundException;
 import com.densoft.shopmefrontend.category.CategoryService;

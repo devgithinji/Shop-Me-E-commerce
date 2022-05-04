@@ -1,5 +1,6 @@
 package com.densoft.shopmecommon.entity;
 
+import com.densoft.shopmecommon.entity.product.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,10 +14,8 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartItem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class CartItem extends IdBasedEntity {
+
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;

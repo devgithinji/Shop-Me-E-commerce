@@ -3,7 +3,7 @@ package com.densoft.shopmeAdmin.setting;
 import com.densoft.shopmeAdmin.currency.CurrencyRepository;
 import com.densoft.shopmeAdmin.util.FileUpload;
 import com.densoft.shopmecommon.entity.Currency;
-import com.densoft.shopmecommon.entity.Setting;
+import com.densoft.shopmecommon.entity.setting.Setting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

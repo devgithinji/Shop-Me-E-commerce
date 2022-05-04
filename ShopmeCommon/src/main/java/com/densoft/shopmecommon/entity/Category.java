@@ -12,10 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "categories")
-public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Category extends IdBasedEntity {
 
     @Column(length = 128, nullable = false, unique = true)
     private String name;
@@ -50,6 +47,7 @@ public class Category {
     }
 
     public Category(Integer id, String name, String alias) {
+        super();
         this.id = id;
         this.name = name;
         this.alias = alias;

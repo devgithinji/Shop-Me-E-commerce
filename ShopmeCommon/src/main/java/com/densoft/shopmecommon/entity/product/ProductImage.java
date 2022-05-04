@@ -1,5 +1,6 @@
-package com.densoft.shopmecommon.entity;
+package com.densoft.shopmecommon.entity.product;
 
+import com.densoft.shopmecommon.entity.IdBasedEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,11 +13,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class ProductImage {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class ProductImage extends IdBasedEntity {
+
 
     @Column(nullable = false)
     private String name;
@@ -25,6 +23,11 @@ public class ProductImage {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    public ProductImage(Integer id, String name, Product product) {
+        this.id = id;
+        this.name = name;
+        this.product = product;
+    }
 
     public ProductImage(String name, Product product) {
         this.name = name;

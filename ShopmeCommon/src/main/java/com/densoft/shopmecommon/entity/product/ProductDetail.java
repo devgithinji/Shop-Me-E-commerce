@@ -1,5 +1,6 @@
-package com.densoft.shopmecommon.entity;
+package com.densoft.shopmecommon.entity.product;
 
+import com.densoft.shopmecommon.entity.IdBasedEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,12 +12,9 @@ import javax.persistence.*;
 @Table(name = "product_details")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class ProductDetail {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class ProductDetail extends IdBasedEntity {
+
     @Column(nullable = false, length = 255)
     private String name;
     @Column(nullable = false, length = 255)
@@ -25,6 +23,16 @@ public class ProductDetail {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    public ProductDetail(Integer id, String name, String value, Product product) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.value = value;
+        this.product = product;
+    }
+
+
 
     public ProductDetail(String name, String value, Product product) {
         this.name = name;

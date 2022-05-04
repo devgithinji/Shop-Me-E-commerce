@@ -1,6 +1,8 @@
 package com.densoft.shopmecommon.entity;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import net.bytebuddy.implementation.bind.annotation.Super;
 
 import javax.persistence.*;
 
@@ -8,12 +10,9 @@ import javax.persistence.*;
 @Table(name = "currencies")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class Currency {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Currency extends IdBasedEntity {
+
 
     @Column(nullable = false, length = 64)
     private String name;
@@ -25,6 +24,7 @@ public class Currency {
     private String code;
 
     public Currency(String name, String symbol, String code) {
+        super();
         this.name = name;
         this.symbol = symbol;
         this.code = code;

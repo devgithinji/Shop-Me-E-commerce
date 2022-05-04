@@ -1,7 +1,7 @@
 package com.densoft.shopmeAdmin.setting;
 
-import com.densoft.shopmecommon.entity.Setting;
-import com.densoft.shopmecommon.entity.SettingBag;
+import com.densoft.shopmecommon.entity.setting.Setting;
+import com.densoft.shopmecommon.entity.setting.SettingBag;
 
 import java.util.List;
 

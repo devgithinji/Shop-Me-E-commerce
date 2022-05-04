@@ -1,5 +1,8 @@
-package com.densoft.shopmecommon.entity;
+package com.densoft.shopmecommon.entity.product;
 
+import com.densoft.shopmecommon.entity.Brand;
+import com.densoft.shopmecommon.entity.Category;
+import com.densoft.shopmecommon.entity.IdBasedEntity;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,10 +18,8 @@ import java.util.*;
 @Entity
 @Table(name = "products")
 @ToString
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Product extends IdBasedEntity {
+
     @Column(unique = true, length = 256, nullable = false)
     private String name;
     @Column(unique = true, length = 256, nullable = false)

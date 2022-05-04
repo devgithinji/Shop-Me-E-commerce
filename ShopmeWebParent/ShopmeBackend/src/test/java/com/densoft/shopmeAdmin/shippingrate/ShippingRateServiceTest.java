@@ -1,7 +1,7 @@
 package com.densoft.shopmeAdmin.shippingrate;
 
 import com.densoft.shopmeAdmin.product.ProductRepository;
-import com.densoft.shopmecommon.entity.Product;
+import com.densoft.shopmecommon.entity.product.Product;
 import com.densoft.shopmecommon.entity.ShippingRate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

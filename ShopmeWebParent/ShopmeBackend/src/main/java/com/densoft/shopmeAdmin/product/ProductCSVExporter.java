@@ -1,8 +1,7 @@
 package com.densoft.shopmeAdmin.product;
 
 import com.densoft.shopmeAdmin.AbstractExporter;
-import com.densoft.shopmecommon.entity.Customer;
-import com.densoft.shopmecommon.entity.Product;
+import com.densoft.shopmecommon.entity.product.Product;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;

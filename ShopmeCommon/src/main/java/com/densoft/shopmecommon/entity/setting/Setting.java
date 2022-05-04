@@ -1,6 +1,5 @@
-package com.densoft.shopmecommon.entity;
+package com.densoft.shopmecommon.entity.setting;
 
-import com.densoft.shopmecommon.SettingCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

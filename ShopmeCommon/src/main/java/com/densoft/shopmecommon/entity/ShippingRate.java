@@ -10,10 +10,8 @@ import java.util.Objects;
 @Table(name = "shipping_rates")
 @Getter
 @Setter
-public class ShippingRate {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class ShippingRate extends IdBasedEntity {
+
     private float rate;
     private Integer days;
     @Column(name = "cod_supported")
