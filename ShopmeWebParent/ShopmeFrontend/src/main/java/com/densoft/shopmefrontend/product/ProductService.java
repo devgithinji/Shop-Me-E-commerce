@@ -1,6 +1,6 @@
 package com.densoft.shopmefrontend.product;
 
-import com.densoft.shopmecommon.entity.Product;
+import com.densoft.shopmecommon.entity.product.Product;
 import com.densoft.shopmecommon.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

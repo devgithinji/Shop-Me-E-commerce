@@ -1,12 +1,10 @@
 package com.densoft.shopmefrontend.setting;
 
-import com.densoft.shopmecommon.SettingCategory;
-import com.densoft.shopmecommon.entity.Setting;
+import com.densoft.shopmecommon.entity.setting.SettingCategory;
+import com.densoft.shopmecommon.entity.setting.Setting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.net.PortUnreachableException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

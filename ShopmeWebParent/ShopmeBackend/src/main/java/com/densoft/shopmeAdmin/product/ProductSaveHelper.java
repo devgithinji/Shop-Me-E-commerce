@@ -1,8 +1,8 @@
 package com.densoft.shopmeAdmin.product;
 
 import com.densoft.shopmeAdmin.util.FileUpload;
-import com.densoft.shopmecommon.entity.Product;
-import com.densoft.shopmecommon.entity.ProductImage;
+import com.densoft.shopmecommon.entity.product.Product;
+import com.densoft.shopmecommon.entity.product.ProductImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;

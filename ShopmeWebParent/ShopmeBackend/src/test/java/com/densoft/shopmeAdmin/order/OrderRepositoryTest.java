@@ -1,6 +1,11 @@
 package com.densoft.shopmeAdmin.order;
 
 import com.densoft.shopmecommon.entity.*;
+import com.densoft.shopmecommon.entity.order.Order;
+import com.densoft.shopmecommon.entity.order.OrderDetail;
+import com.densoft.shopmecommon.entity.order.OrderStatus;
+import com.densoft.shopmecommon.entity.order.PaymentMethod;
+import com.densoft.shopmecommon.entity.product.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

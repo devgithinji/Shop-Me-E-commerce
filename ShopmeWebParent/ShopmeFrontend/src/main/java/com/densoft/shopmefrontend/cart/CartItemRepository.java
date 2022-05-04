@@ -2,7 +2,7 @@ package com.densoft.shopmefrontend.cart;
 
 import com.densoft.shopmecommon.entity.CartItem;
 import com.densoft.shopmecommon.entity.Customer;
-import com.densoft.shopmecommon.entity.Product;
+import com.densoft.shopmecommon.entity.product.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

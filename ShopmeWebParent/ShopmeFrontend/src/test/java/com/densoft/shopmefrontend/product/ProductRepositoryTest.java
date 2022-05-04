@@ -1,6 +1,6 @@
 package com.densoft.shopmefrontend.product;
 
-import com.densoft.shopmecommon.entity.Product;
+import com.densoft.shopmecommon.entity.product.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

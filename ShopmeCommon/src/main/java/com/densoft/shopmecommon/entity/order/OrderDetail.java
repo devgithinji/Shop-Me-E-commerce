@@ -1,5 +1,7 @@
-package com.densoft.shopmecommon.entity;
+package com.densoft.shopmecommon.entity.order;
 
+import com.densoft.shopmecommon.entity.IdBasedEntity;
+import com.densoft.shopmecommon.entity.product.Product;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,11 +11,8 @@ import javax.persistence.*;
 @Table(name = "order_details")
 @Getter
 @Setter
-public class OrderDetail {
+public class OrderDetail extends IdBasedEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
 
     private int quantity;
     private float productCost;

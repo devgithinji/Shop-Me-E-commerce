@@ -2,17 +2,14 @@ package com.densoft.shopmeAdmin.product;
 
 import com.densoft.shopmeAdmin.brand.BrandService;
 import com.densoft.shopmeAdmin.category.CategoryService;
-import com.densoft.shopmeAdmin.customer.CustomerCSVExporter;
 import com.densoft.shopmeAdmin.paging.PagingAndSortingHelper;
 import com.densoft.shopmeAdmin.paging.PagingAndSortingParam;
 import com.densoft.shopmeAdmin.security.CustomUserDetails;
 import com.densoft.shopmeAdmin.util.FileUpload;
 import com.densoft.shopmecommon.entity.Brand;
 import com.densoft.shopmecommon.entity.Category;
-import com.densoft.shopmecommon.entity.Customer;
-import com.densoft.shopmecommon.entity.Product;
+import com.densoft.shopmecommon.entity.product.Product;
 import com.densoft.shopmecommon.exception.ProductNotFoundException;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

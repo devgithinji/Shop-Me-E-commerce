@@ -1,6 +1,6 @@
 package com.densoft.shopmefrontend.product;
 
-import com.densoft.shopmecommon.entity.Product;
+import com.densoft.shopmecommon.entity.product.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

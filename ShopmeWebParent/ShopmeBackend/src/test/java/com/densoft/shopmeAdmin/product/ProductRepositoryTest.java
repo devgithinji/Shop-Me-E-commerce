@@ -4,7 +4,7 @@ import com.densoft.shopmeAdmin.brand.BrandRepository;
 import com.densoft.shopmeAdmin.category.CategoryRepository;
 import com.densoft.shopmecommon.entity.Brand;
 import com.densoft.shopmecommon.entity.Category;
-import com.densoft.shopmecommon.entity.Product;
+import com.densoft.shopmecommon.entity.product.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

@@ -4,7 +4,7 @@ import com.densoft.shopmeAdmin.paging.PagingAndSortingHelper;
 import com.densoft.shopmeAdmin.product.ProductRepository;
 import com.densoft.shopmeAdmin.setting.country.CountryRepository;
 import com.densoft.shopmecommon.entity.Country;
-import com.densoft.shopmecommon.entity.Product;
+import com.densoft.shopmecommon.entity.product.Product;
 import com.densoft.shopmecommon.entity.ShippingRate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

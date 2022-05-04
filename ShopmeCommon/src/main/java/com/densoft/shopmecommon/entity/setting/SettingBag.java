@@ -1,4 +1,4 @@
-package com.densoft.shopmecommon.entity;
+package com.densoft.shopmecommon.entity.setting;
 
 import java.util.List;
 

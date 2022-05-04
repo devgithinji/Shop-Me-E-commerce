@@ -1,7 +1,7 @@
 package com.densoft.shopmefrontend.setting;
 
-import com.densoft.shopmecommon.SettingCategory;
-import com.densoft.shopmecommon.entity.Setting;
+import com.densoft.shopmecommon.entity.setting.SettingCategory;
+import com.densoft.shopmecommon.entity.setting.Setting;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

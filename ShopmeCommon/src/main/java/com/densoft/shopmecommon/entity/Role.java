@@ -3,18 +3,15 @@ package com.densoft.shopmecommon.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "roles")
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(of = {"id"})
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Role extends IdBasedEntity {
+
     @Column(length = 40, nullable = false, unique = true)
     private String name;
     @Column(length = 150, nullable = false)
@@ -27,6 +24,19 @@ public class Role {
     public Role(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof IdBasedEntity)) return false;
+        IdBasedEntity that = (IdBasedEntity) o;
+        return getId().equals(that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 
     @Override
