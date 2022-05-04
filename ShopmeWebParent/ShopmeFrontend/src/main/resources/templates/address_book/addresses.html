@@ -30,12 +30,12 @@
 
                             <th:block th:if="${usePrimaryAddressAsDefault}">
                                 <span class="text-danger"
-                                      th:text="${redirectedFromCheckoutPage ? '[Currently Selected]' : '[Default]'}"></span>
+                                      th:text="${redirectedFromCheckoutPage ? '[Currently Selected]' : '[Default]'}">
+                                </span>
                             </th:block>
 
                             <th:block th:unless="${usePrimaryAddressAsDefault}">
-                                <a th:unless="${param.redirect}" th:href="@{'/address_book/default/0'}">[Set as
-                                    default]</a>
+                                <a th:unless="${param.redirect}" th:href="@{'/address_book/default/0'}">[Set as default]</a>
                                 <a th:if="${param.redirect != null && param.redirect[0] == 'cart'}"
                                    th:href="@{'/address_book/default/0?redirect=cart'}">[Set as default]</a>
                                 <a th:if="${redirectedFromCheckoutPage}"
