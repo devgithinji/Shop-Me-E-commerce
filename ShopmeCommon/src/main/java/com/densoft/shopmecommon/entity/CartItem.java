@@ -24,6 +24,9 @@ public class CartItem extends IdBasedEntity {
     private Product product;
     private int quantity;
 
+    @Transient
+    private float shippingCost;
+
 
     @Override
     public String toString() {
@@ -38,5 +41,10 @@ public class CartItem extends IdBasedEntity {
     @Transient
     public float getSubTotal() {
         return product.getDiscountPrice() * quantity;
+    }
+
+    @Transient
+    public float getShippingCost() {
+        return shippingCost;
     }
 }
