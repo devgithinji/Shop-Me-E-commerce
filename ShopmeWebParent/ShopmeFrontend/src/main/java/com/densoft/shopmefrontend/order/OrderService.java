@@ -9,7 +9,6 @@ import com.densoft.shopmecommon.entity.order.OrderStatus;
 import com.densoft.shopmecommon.entity.order.PaymentMethod;
 import com.densoft.shopmecommon.entity.product.Product;
 import com.densoft.shopmefrontend.checkout.CheckOutInfo;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

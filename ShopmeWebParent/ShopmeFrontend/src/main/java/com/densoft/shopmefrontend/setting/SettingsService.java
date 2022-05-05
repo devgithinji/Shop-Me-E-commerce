@@ -26,4 +26,9 @@ public class SettingsService {
 
     }
 
+    public CurrencySettingBag getCurrencySettings() {
+        List<Setting> currencySettings = settingRepository.findByCategory(SettingCategory.CURRENCY);
+        return new CurrencySettingBag(currencySettings);
+    }
+
 }
