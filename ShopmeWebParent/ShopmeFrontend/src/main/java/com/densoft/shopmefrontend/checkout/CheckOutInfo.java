@@ -1,5 +1,6 @@
 package com.densoft.shopmefrontend.checkout;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -65,5 +66,10 @@ public class CheckOutInfo {
 
     public void setCodSupported(boolean codSupported) {
         this.codSupported = codSupported;
+    }
+
+    public String getPaymentTotalForPayPal() {
+        DecimalFormat format = new DecimalFormat("###,###.##");
+        return format.format(paymentTotal);
     }
 }

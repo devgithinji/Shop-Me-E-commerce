@@ -9,10 +9,13 @@ import com.densoft.shopmecommon.entity.order.PaymentMethod;
 import com.densoft.shopmefrontend.Utility;
 import com.densoft.shopmefrontend.address.AddressService;
 import com.densoft.shopmefrontend.cart.ShoppingCartService;
+import com.densoft.shopmefrontend.checkout.paypal.PayPalApiException;
+import com.densoft.shopmefrontend.checkout.paypal.PayPalService;
 import com.densoft.shopmefrontend.customer.CustomerService;
 import com.densoft.shopmefrontend.order.OrderService;
 import com.densoft.shopmefrontend.setting.CurrencySettingBag;
 import com.densoft.shopmefrontend.setting.EmailSettingBag;
+import com.densoft.shopmefrontend.setting.PaymentSettingBag;
 import com.densoft.shopmefrontend.setting.SettingsService;
 import com.densoft.shopmefrontend.shipping.ShippingRateService;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -21,7 +24,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.w3c.dom.CDATASection;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -43,7 +45,9 @@ public class CheckOutController {
 
     private final SettingsService settingsService;
 
-    public CheckOutController(CheckOutService checkOutService, CustomerService customerService, AddressService addressService, ShippingRateService shippingRateService, ShoppingCartService shoppingCartService, OrderService orderService, SettingsService settingsService) {
+    private final PayPalService payPalService;
+
+    public CheckOutController(CheckOutService checkOutService, CustomerService customerService, AddressService addressService, ShippingRateService shippingRateService, ShoppingCartService shoppingCartService, OrderService orderService, SettingsService settingsService, PayPalService payPalService) {
         this.checkOutService = checkOutService;
         this.customerService = customerService;
         this.addressService = addressService;
@@ -51,6 +55,7 @@ public class CheckOutController {
         this.shoppingCartService = shoppingCartService;
         this.orderService = orderService;
         this.settingsService = settingsService;
+        this.payPalService = payPalService;
     }
 
     @GetMapping("/checkout")
@@ -72,8 +77,16 @@ public class CheckOutController {
             return "redirect:/cart";
         }
 
+
         List<CartItem> cartItemList = shoppingCartService.listCartItems(customer);
         CheckOutInfo checkOutInfo = checkOutService.prepareCheckout(cartItemList, shippingRate);
+        String currencyCode = settingsService.getCurrencyCode();
+        PaymentSettingBag paymentSetting = settingsService.getPaymentSettings();
+        String paypalClientId = paymentSetting.getClientID();
+
+        model.addAttribute("paypalClientId", paypalClientId);
+        model.addAttribute("currencyCode", currencyCode);
+        model.addAttribute("customer", customer);
         model.addAttribute("checkoutInfo", checkOutInfo);
         model.addAttribute("cartItems", cartItemList);
 
@@ -148,6 +161,29 @@ public class CheckOutController {
         helper.setText(emailContent, true);
         mailSender.send(message);
 
+    }
+
+    @PostMapping("/process_paypal_order")
+    public String processPayPalOrder(HttpServletRequest request, Model model) throws MessagingException, UnsupportedEncodingException {
+        String orderId = request.getParameter("orderId");
+        String pageTitle = "Checkout Failure";
+        String message = null;
+        try {
+            if (payPalService.validateOrder(orderId)) {
+                return placeOrder(request);
+            } else {
+                pageTitle = "Checkout Failure";
+                message = "Error: Transaction could not be completed because order information is invalid";
+            }
+        } catch (PayPalApiException e) {
+            message = "Error: Transaction failed due to error: " + e.getMessage();
+        }
+
+        model.addAttribute("pageTitle", pageTitle);
+        model.addAttribute("title", pageTitle);
+        model.addAttribute("message", message);
+
+        return "message";
     }
 
 
