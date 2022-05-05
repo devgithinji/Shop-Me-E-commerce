@@ -37,12 +37,15 @@
                 </div>
                 <div class="card-body">
                     <div th:if="${checkoutInfo.codSupported}">
-                        <p>
-                            <input type="radio"> Cash on Delivery
-                            &nbsp;
-                            <br>
-                            <button class="btn btn-primary my-2">Place Order with COD</button>
-                        </p>
+                        <form th:action="@{/place_order}" method="post">
+                            <p>
+                                <input id="radioCOD" name="paymentMethod" value="COD" type="radio"> Cash on Delivery
+                                &nbsp;
+                                <br>
+                                <button class="btn btn-primary d-none my-2" id="buttonSubmit">Place Order with COD
+                                </button>
+                            </p>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -104,5 +107,17 @@
     </div>
     <div th:replace="navigation::footer_menu"></div>
 </div>
+<script type="text/javascript">
+    let contextPath = "[[@{/}]]";
+    let csrfHeaderName = "[[${_csrf.headerName}]]";
+    let csrfValue = "[[${_csrf.token}]]";
+
+    $(document).ready(function () {
+        $("#radioCOD").on('click', function () {
+            $("#buttonSubmit").removeClass("d-none");
+        })
+    })
+
+</script>
 </body>
 </html>

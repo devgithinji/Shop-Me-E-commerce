@@ -1,6 +1,7 @@
 package com.densoft.shopmecommon.entity.order;
 
 import com.densoft.shopmecommon.entity.AbstractAddress;
+import com.densoft.shopmecommon.entity.Address;
 import com.densoft.shopmecommon.entity.Customer;
 import com.densoft.shopmecommon.entity.IdBasedEntity;
 import lombok.Getter;
@@ -74,5 +75,17 @@ public class Order extends AbstractAddress {
         destination += country;
 
         return destination;
+    }
+
+    public void copyShippingAddress(Address address) {
+        setFirstName(address.getFirstName());
+        setLastName(address.getLastName());
+        setPhoneNumber(address.getPhoneNumber());
+        setAddressLine1(address.getAddressLine1());
+        setAddressLine2(address.getAddressLine2());
+        setCity(address.getCity());
+        setCountry(address.getCountry().getName());
+        setPostalCode(address.getPostalCode());
+        setState(address.getState());
     }
 }
