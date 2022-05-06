@@ -1,10 +1,7 @@
 package com.densoft.shopmeAdmin.order;
 
 import com.densoft.shopmecommon.entity.*;
-import com.densoft.shopmecommon.entity.order.Order;
-import com.densoft.shopmecommon.entity.order.OrderDetail;
-import com.densoft.shopmecommon.entity.order.OrderStatus;
-import com.densoft.shopmecommon.entity.order.PaymentMethod;
+import com.densoft.shopmecommon.entity.order.*;
 import com.densoft.shopmecommon.entity.product.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,6 +149,32 @@ class OrderRepositoryTest {
         orderRepository.deleteById(orderId);
         Optional<Order> result = orderRepository.findById(orderId);
         assertThat(result).isNotPresent();
+    }
+
+    @Test
+    public void testUpdateOrderTracks() {
+        Integer orderId = 5;
+        Order order = orderRepository.findById(orderId).get();
+
+        OrderTrack newTrack = new OrderTrack();
+        newTrack.setOrder(order);
+        newTrack.setUpdatedTime(new Date());
+        newTrack.setStatus(OrderStatus.PICKED);
+        newTrack.setNotes(OrderStatus.PICKED.defaultDescription());
+
+
+        OrderTrack processingTrack = new OrderTrack();
+        processingTrack.setOrder(order);
+        processingTrack.setUpdatedTime(new Date());
+        processingTrack.setStatus(OrderStatus.PACKAGED);
+        processingTrack.setNotes(OrderStatus.PACKAGED.defaultDescription());
+
+        List<OrderTrack> orderTracks = order.getOrderTracks();
+        orderTracks.add(newTrack);
+        orderTracks.add(processingTrack);
+        Order updatedOrder = orderRepository.save(order);
+
+        assertThat(updatedOrder.getOrderTracks()).hasSizeGreaterThan(1);
     }
 
 }

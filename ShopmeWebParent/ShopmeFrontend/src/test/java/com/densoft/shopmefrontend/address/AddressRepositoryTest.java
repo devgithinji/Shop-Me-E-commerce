@@ -78,4 +78,10 @@ class AddressRepositoryTest {
         assertThat(optionalAddress).isEmpty();
     }
 
+    @Test
+    public void testGetDefault(){
+        Address address = addressRepository.findByCustomerAndDefaultForShipping(new Customer(40), true);
+        assertThat(address).isNotNull();
+    }
+
 }

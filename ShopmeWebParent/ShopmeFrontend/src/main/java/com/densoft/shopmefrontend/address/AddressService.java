@@ -49,4 +49,5 @@ public class AddressService {
     public Address getDefaultAddress(Customer customer) {
         return addressRepository.findByCustomerAndDefaultForShipping(customer, true);
     }
+
 }
