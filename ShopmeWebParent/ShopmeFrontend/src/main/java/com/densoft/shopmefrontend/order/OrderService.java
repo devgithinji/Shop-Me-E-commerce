@@ -3,10 +3,7 @@ package com.densoft.shopmefrontend.order;
 import com.densoft.shopmecommon.entity.Address;
 import com.densoft.shopmecommon.entity.CartItem;
 import com.densoft.shopmecommon.entity.Customer;
-import com.densoft.shopmecommon.entity.order.Order;
-import com.densoft.shopmecommon.entity.order.OrderDetail;
-import com.densoft.shopmecommon.entity.order.OrderStatus;
-import com.densoft.shopmecommon.entity.order.PaymentMethod;
+import com.densoft.shopmecommon.entity.order.*;
 import com.densoft.shopmecommon.entity.product.Product;
 import com.densoft.shopmefrontend.checkout.CheckOutInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +60,15 @@ public class OrderService {
             orderDetail.setShippingCost(cartItem.getShippingCost());
             orderDetails.add(orderDetail);
         }
+
+
+        OrderTrack track = new OrderTrack();
+        track.setOrder(order);
+        track.setStatus(OrderStatus.NEW);
+        track.setNotes(OrderStatus.NEW.defaultDescription());
+        track.setUpdatedTime(new Date());
+
+        order.getOrderTracks().add(track);
 
         return orderRepository.save(order);
     }

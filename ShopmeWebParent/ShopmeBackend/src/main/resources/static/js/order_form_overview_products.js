@@ -4,10 +4,9 @@ let fieldShippingCost;
 let fieldTax;
 let fieldTotal;
 
-$(document).ready(function() {
-
+$(document).ready(function () {
     fieldProductCost = $("#productCost");
-    fieldSubtotal = $("#subtotal");
+    fieldSubtotal = $("#subTotal");
     fieldShippingCost = $("#shippingCost");
     fieldTax = $("#tax");
     fieldTotal = $("#total");
@@ -15,21 +14,21 @@ $(document).ready(function() {
     formatOrderAmounts();
     formatProductAmounts();
 
-    $("#productList").on("change", ".quantity-input", function(e) {
+    $("#productList").on("change", ".quantity-input", function (e) {
         updateSubtotalWhenQuantityChanged($(this));
         updateOrderAmounts();
     });
 
-    $("#productList").on("change", ".price-input", function(e) {
+    $("#productList").on("change", ".price-input", function (e) {
         updateSubtotalWhenPriceChanged($(this));
         updateOrderAmounts();
     });
 
-    $("#productList").on("change", ".cost-input", function(e) {
+    $("#productList").on("change", ".cost-input", function (e) {
         updateOrderAmounts();
     });
 
-    $("#productList").on("change", ".ship-input", function(e) {
+    $("#productList").on("change", ".ship-input", function (e) {
         updateOrderAmounts();
     });
 });
@@ -37,7 +36,7 @@ $(document).ready(function() {
 function updateOrderAmounts() {
     let totalCost = 0.0;
 
-    $(".cost-input").each(function(e) {
+    $(".cost-input").each(function (e) {
         let costInputField = $(this);
         let rowNumber = costInputField.attr("rowNumber");
         let quantityValue = $("#quantity" + rowNumber).val();
@@ -51,16 +50,16 @@ function updateOrderAmounts() {
 
     let orderSubtotal = 0.0;
 
-    $(".subtotal-output").each(function(e) {
+    $(".subtotal-output").each(function (e) {
         let productSubtotal = getNumberValueRemovedThousandSeparator($(this));
         orderSubtotal += productSubtotal;
     });
 
-    setAndFormatNumberForField("subtotal", orderSubtotal);
+    setAndFormatNumberForField("subTotal", orderSubtotal);
 
     let shippingCost = 0.0;
 
-    $(".ship-input").each(function(e) {
+    $(".ship-input").each(function (e) {
         let productShip = getNumberValueRemovedThousandSeparator($(this));
         shippingCost += productShip;
     });
@@ -103,19 +102,19 @@ function updateSubtotalWhenQuantityChanged(input) {
 }
 
 function formatProductAmounts() {
-    $(".cost-input").each(function(e) {
+    $(".cost-input").each(function (e) {
         formatNumberForField($(this));
     });
 
-    $(".price-input").each(function(e) {
+    $(".price-input").each(function (e) {
         formatNumberForField($(this));
     });
 
-    $(".subtotal-output").each(function(e) {
+    $(".subtotal-output").each(function (e) {
         formatNumberForField($(this));
     });
 
-    $(".ship-input").each(function(e) {
+    $(".ship-input").each(function (e) {
         formatNumberForField($(this));
     });
 }
@@ -141,21 +140,22 @@ function processFormBeforeSubmit() {
     removeThousandSeparatorForField(fieldTax);
     removeThousandSeparatorForField(fieldTotal);
 
-    $(".cost-input").each(function(e) {
+    $(".cost-input").each(function (e) {
         removeThousandSeparatorForField($(this));
     });
 
-    $(".price-input").each(function(e) {
+    $(".price-input").each(function (e) {
         removeThousandSeparatorForField($(this));
     });
 
-    $(".subtotal-output").each(function(e) {
+    $(".subtotal-output").each(function (e) {
         removeThousandSeparatorForField($(this));
     });
 
-    $(".ship-input").each(function(e) {
+    $(".ship-input").each(function (e) {
         removeThousandSeparatorForField($(this));
     });
+
 
     return true;
 }

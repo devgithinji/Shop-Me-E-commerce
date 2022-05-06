@@ -2,6 +2,7 @@ package com.densoft.shopmeAdmin.order;
 
 import com.densoft.shopmeAdmin.paging.PagingAndSortingHelper;
 import com.densoft.shopmeAdmin.paging.PagingAndSortingParam;
+import com.densoft.shopmeAdmin.security.CustomUserDetails;
 import com.densoft.shopmeAdmin.setting.SettingsService;
 import com.densoft.shopmecommon.entity.Country;
 import com.densoft.shopmecommon.entity.order.Order;
@@ -12,6 +13,7 @@ import com.densoft.shopmecommon.entity.product.Product;
 import com.densoft.shopmecommon.entity.setting.Setting;
 import com.densoft.shopmecommon.exception.OrderNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,10 +46,15 @@ public class OrderController {
     public String listByPage(
             @PagingAndSortingParam(listName = "listOrders", moduleURL = "/orders") PagingAndSortingHelper helper,
             @PathVariable(name = "pageNum") int pageNum,
-            HttpServletRequest request) {
+            HttpServletRequest request,
+            @AuthenticationPrincipal CustomUserDetails loggedUser) {
 
         orderService.listByPage(pageNum, helper);
         loadCurrencySetting(request);
+
+        if (!loggedUser.hasRole("Admin") && !loggedUser.hasRole("Salesperson") && loggedUser.hasRole("Shipper")) {
+            return "orders/orders_shipper";
+        }
 
         return "orders/orders";
     }
@@ -62,11 +69,22 @@ public class OrderController {
 
     @GetMapping("/orders/detail/{id}")
     public String viewOrderDetails(@PathVariable("id") Integer id, Model model,
-                                   RedirectAttributes ra, HttpServletRequest request) {
+                                   RedirectAttributes ra, HttpServletRequest request,
+                                   @AuthenticationPrincipal CustomUserDetails loggedUser) {
         try {
             Order order = orderService.get(id);
             loadCurrencySetting(request);
+
+
+            boolean isVisibleForAdminOrSalesperson = false;
+
+            if (loggedUser.hasRole("Admin") || loggedUser.hasRole("Salesperson")) {
+                isVisibleForAdminOrSalesperson = true;
+            }
+
+            model.addAttribute("isVisibleForAdminOrSalesperson", isVisibleForAdminOrSalesperson);
             model.addAttribute("order", order);
+
 
             return "orders/order_details_modal";
 
@@ -90,8 +108,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders/edit/{id}")
-    public String editOrder(@PathVariable("id") Integer id, Model model, RedirectAttributes ra,
-                            HttpServletRequest request) {
+    public String editOrder(@PathVariable("id") Integer id, Model model, RedirectAttributes ra, HttpServletRequest request) {
         try {
             Order order = orderService.get(id);;
 
@@ -117,6 +134,7 @@ public class OrderController {
 
         updateProductDetails(order, request);
         updateOrderTracks(order, request);
+
 
         orderService.save(order);
 
@@ -159,6 +177,7 @@ public class OrderController {
     }
 
     private void updateProductDetails(Order order, HttpServletRequest request) {
+
         String[] detailIds = request.getParameterValues("detailId");
         String[] productIds = request.getParameterValues("productId");
         String[] productPrices = request.getParameterValues("productPrice");
@@ -170,8 +189,9 @@ public class OrderController {
         Set<OrderDetail> orderDetails = order.getOrderDetails();
 
         for (int i = 0; i < detailIds.length; i++) {
+
             System.out.println("Detail ID: " + detailIds[i]);
-            System.out.println("\t Prodouct ID: " + productIds[i]);
+            System.out.println("\t Product ID: " + productIds[i]);
             System.out.println("\t Cost: " + productDetailCosts[i]);
             System.out.println("\t Quantity: " + quantities[i]);
             System.out.println("\t Subtotal: " + productSubtotals[i]);
@@ -184,7 +204,6 @@ public class OrderController {
                 orderDetail.setId(detailId);
             }
 
-            System.out.println("denno");
 
             orderDetail.setOrder(order);
             orderDetail.setProduct(new Product(Integer.parseInt(productIds[i])));
