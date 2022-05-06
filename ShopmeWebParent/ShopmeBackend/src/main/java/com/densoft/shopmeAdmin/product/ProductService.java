@@ -47,6 +47,19 @@ public class ProductService {
         helper.updateModelAttributes(pageNum, page);
     }
 
+    public void searchProducts(int pageNum, PagingAndSortingHelper helper) {
+        Pageable pageable = helper.createPageable(PRODUCTS_PER_PAGE, pageNum);
+        String keyword = helper.getKeyWord();
+        System.out.println("keyword: "+keyword);
+        Page<Product> page = productRepository.searchProductsByName(keyword, pageable);
+        List<Product> products = page.getContent();
+        products.forEach(product -> {
+            System.out.println(product.getName());
+        });
+        System.out.println("size: "+products.size());
+        helper.updateModelAttributes(pageNum, page);
+    }
+
     public Product save(Product product) {
         if (product.getAlias() == null || product.getAlias().isEmpty()) {
             String alias = product.getName().replaceAll(" ", "_");

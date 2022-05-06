@@ -177,12 +177,11 @@
         },
         oncancel: function (data) {
             //buyer cancels payment
-            alert("payment cancelled by the buyer")
+            showWarningModal("payment cancelled by the buyer")
         },
         onError: function (err) {
             //error that prevents buyer from doing checkout
-            console.log(err)
-            alert("something wrong happened")
+            showErrorModal("Something wrong with your address information, so payment will not work.");
         }
     }).render("#paypal-button-container");
 

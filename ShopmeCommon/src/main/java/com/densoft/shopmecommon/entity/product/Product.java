@@ -83,6 +83,10 @@ public class Product extends IdBasedEntity {
         this.id = id;
     }
 
+    public Product(String name) {
+        this.name = name;
+    }
+
     public void addExtraImage(String imageName) {
         this.images.add(new ProductImage(imageName, this));
     }

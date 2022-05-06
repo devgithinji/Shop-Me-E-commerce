@@ -1,7 +1,12 @@
 package com.densoft.shopmeAdmin.order;
 
 import com.densoft.shopmeAdmin.paging.PagingAndSortingHelper;
+import com.densoft.shopmeAdmin.setting.country.CountryRepository;
+import com.densoft.shopmecommon.entity.Country;
 import com.densoft.shopmecommon.entity.order.Order;
+import com.densoft.shopmecommon.entity.order.OrderStatus;
+import com.densoft.shopmecommon.entity.order.OrderTrack;
+import com.densoft.shopmecommon.exception.OrderNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -19,6 +26,8 @@ public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private CountryRepository countryRepository;
 
     public void listByPage(int pageNum, PagingAndSortingHelper helper) {
         String sortField = helper.getSortField();
@@ -63,5 +72,38 @@ public class OrderService {
         }
 
         orderRepository.deleteById(id);
+    }
+
+    public List<Country> listAllCountries() {
+        return countryRepository.findAllByOrderByNameAsc();
+    }
+
+    public void save(Order orderInForm) {
+        Order orderInDB = orderRepository.findById(orderInForm.getId()).get();
+        orderInForm.setOrderTime(orderInDB.getOrderTime());
+        orderInForm.setCustomer(orderInDB.getCustomer());
+
+        orderRepository.save(orderInForm);
+    }
+
+    public void updateStatus(Integer orderId, String status) {
+        Order orderInDB = orderRepository.findById(orderId).get();
+        OrderStatus statusToUpdate = OrderStatus.valueOf(status);
+
+        if (!orderInDB.hasStatus(statusToUpdate)) {
+            List<OrderTrack> orderTracks = orderInDB.getOrderTracks();
+
+            OrderTrack track = new OrderTrack();
+            track.setOrder(orderInDB);
+            track.setStatus(statusToUpdate);
+            track.setUpdatedTime(new Date());
+            track.setNotes(statusToUpdate.defaultDescription());
+
+            orderTracks.add(track);
+
+            orderInDB.setStatus(statusToUpdate);
+
+            orderRepository.save(orderInDB);
+        }
     }
 }
