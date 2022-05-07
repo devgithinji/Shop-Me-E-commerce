@@ -5,8 +5,13 @@ import com.densoft.shopmecommon.entity.CartItem;
 import com.densoft.shopmecommon.entity.Customer;
 import com.densoft.shopmecommon.entity.order.*;
 import com.densoft.shopmecommon.entity.product.Product;
+import com.densoft.shopmecommon.exception.OrderNotFoundException;
 import com.densoft.shopmefrontend.checkout.CheckOutInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -15,6 +20,8 @@ import java.util.Set;
 
 @Service
 public class OrderService {
+
+    public static final int ORDERS_PER_PAGE = 5;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -46,6 +53,25 @@ public class OrderService {
             order.copyShippingAddress(address);
         }
 
+        setOrderDetails(cartItemList, order);
+
+        OrderTrack track = getOrderTrack(order);
+
+        order.getOrderTracks().add(track);
+
+        return orderRepository.save(order);
+    }
+
+    private OrderTrack getOrderTrack(Order order) {
+        OrderTrack track = new OrderTrack();
+        track.setOrder(order);
+        track.setStatus(OrderStatus.NEW);
+        track.setNotes(OrderStatus.NEW.defaultDescription());
+        track.setUpdatedTime(new Date());
+        return track;
+    }
+
+    private void setOrderDetails(List<CartItem> cartItemList, Order order) {
         Set<OrderDetail> orderDetails = order.getOrderDetails();
 
         for (CartItem cartItem : cartItemList) {
@@ -60,16 +86,49 @@ public class OrderService {
             orderDetail.setShippingCost(cartItem.getShippingCost());
             orderDetails.add(orderDetail);
         }
+    }
 
+    public Page<Order> listForCustomerByPage(Customer customer, int pageNUm, String sortField, String sortDir, String keyword) {
+        Sort sort = Sort.by(sortField);
+        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+        Pageable pageable = PageRequest.of(pageNUm - 1, ORDERS_PER_PAGE, sort);
+
+        if (keyword != null) {
+            return orderRepository.findAll(keyword, customer.getId(), pageable);
+        }
+
+        return orderRepository.findAll(customer.getId(), pageable);
+    }
+
+    public Order getOrder(Integer id, Customer customer) {
+        return orderRepository.findByIdAndCustomer(id, customer);
+    }
+
+
+    public void setOrderReturnRequested(OrderReturnRequest request, Customer customer)
+            throws OrderNotFoundException {
+        Order order = orderRepository.findByIdAndCustomer(request.getOrderId(), customer);
+        if (order == null) {
+            throw new OrderNotFoundException("Order ID " + request.getOrderId() + " not found");
+        }
+
+        if (order.isReturnRequested()) return;
 
         OrderTrack track = new OrderTrack();
         track.setOrder(order);
-        track.setStatus(OrderStatus.NEW);
-        track.setNotes(OrderStatus.NEW.defaultDescription());
         track.setUpdatedTime(new Date());
+        track.setStatus(OrderStatus.RETURN_REQUESTED);
+
+        String notes = "Reason: " + request.getReason();
+        if (!"".equals(request.getNote())) {
+            notes += ". " + request.getNote();
+        }
+
+        track.setNotes(notes);
 
         order.getOrderTracks().add(track);
+        order.setStatus(OrderStatus.RETURN_REQUESTED);
 
-        return orderRepository.save(order);
+        orderRepository.save(order);
     }
 }

@@ -231,8 +231,4 @@ public class Order extends AbstractAddress {
         return productNames;
     }
 
-//    public void setTotal(String total) {
-//
-//        this.total = Float.parseFloat(total.replace(",", ""));
-//    }
 }
