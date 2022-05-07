@@ -81,19 +81,21 @@
                         <a class="nav-link" th:href="@{/menu}">Menu</a>
                     </li>
                 </th:block>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown">
-                        Settings
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" th:href="@{/settings#general}">General</a>
-                        <a class="dropdown-item" th:href="@{/settings#countries}">Countries</a>
-                        <a class="dropdown-item" th:href="@{/settings#states}">States</a>
-                        <a class="dropdown-item" th:href="@{/settings#mailServer}">MailServer</a>
-                        <a class="dropdown-item" th:href="@{/settings#MailTemplates}">Mail Templates</a>
-                        <a class="dropdown-item" th:href="@{/settings#payment}">Payment</a>
-                    </div>
-                </li>
+                <th:block sec:authorize="hasAnyAuthority('Admin')">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown">
+                            Settings
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" th:href="@{/settings#general}">General</a>
+                            <a class="dropdown-item" th:href="@{/settings#countries}">Countries</a>
+                            <a class="dropdown-item" th:href="@{/settings#states}">States</a>
+                            <a class="dropdown-item" th:href="@{/settings#mailServer}">MailServer</a>
+                            <a class="dropdown-item" th:href="@{/settings#MailTemplates}">Mail Templates</a>
+                            <a class="dropdown-item" th:href="@{/settings#payment}">Payment</a>
+                        </div>
+                    </li>
+                </th:block>
                 <li>
                     <span class="fas fa-user fa-2x icon-silver"></span>
                 </li>
