@@ -5,6 +5,7 @@ import com.densoft.shopmecommon.entity.CartItem;
 import com.densoft.shopmecommon.entity.Customer;
 import com.densoft.shopmecommon.entity.order.*;
 import com.densoft.shopmecommon.entity.product.Product;
+import com.densoft.shopmecommon.exception.OrderNotFoundException;
 import com.densoft.shopmefrontend.checkout.CheckOutInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -101,5 +102,33 @@ public class OrderService {
 
     public Order getOrder(Integer id, Customer customer) {
         return orderRepository.findByIdAndCustomer(id, customer);
+    }
+
+
+    public void setOrderReturnRequested(OrderReturnRequest request, Customer customer)
+            throws OrderNotFoundException {
+        Order order = orderRepository.findByIdAndCustomer(request.getOrderId(), customer);
+        if (order == null) {
+            throw new OrderNotFoundException("Order ID " + request.getOrderId() + " not found");
+        }
+
+        if (order.isReturnRequested()) return;
+
+        OrderTrack track = new OrderTrack();
+        track.setOrder(order);
+        track.setUpdatedTime(new Date());
+        track.setStatus(OrderStatus.RETURN_REQUESTED);
+
+        String notes = "Reason: " + request.getReason();
+        if (!"".equals(request.getNote())) {
+            notes += ". " + request.getNote();
+        }
+
+        track.setNotes(notes);
+
+        order.getOrderTracks().add(track);
+        order.setStatus(OrderStatus.RETURN_REQUESTED);
+
+        orderRepository.save(order);
     }
 }
