@@ -11,7 +11,7 @@ import static java.lang.annotation.RetentionPolicy.*;
 @Target(PARAMETER)
 public @interface PagingAndSortingParam {
 
-    public String moduleURL();
+    String moduleURL();
 
-    public String listName();
+    String listName();
 }

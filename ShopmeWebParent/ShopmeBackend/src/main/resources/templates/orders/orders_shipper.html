@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments :: page_head('Orders - Shopme Admin', 'none')"/>
+<head th:replace="fragments :: page_head('Orders - Shopme Admin', 'none')"></head>
 <body>
 <div class="container-fluid">
     <div th:replace="navigation :: menu"></div>
@@ -8,12 +8,12 @@
         <h2>Manage Orders</h2>
     </div>
 
-    <div th:replace="fragments :: search_form_and_message"/>
+    <div th:replace="fragments :: search_form_and_message"></div>
 
     <div>
         <th:block th:each="order : ${listOrders}">
-            <div class="row m-1">
-                <div class="card">
+            <div class="row m-1 tex">
+                <div class="card  mx-auto my-2">
                     <div class="card-header">
                         <div class="row">
                             <div class="col">
@@ -30,15 +30,15 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div>
+                        <div class="my-2">
                             <i class="fas fa-user"></i>
                             <b>[[${order.recipientName}]]</b>
                         </div>
-                        <div>
+                        <div class="my-2">
                             <i class="fas fa-home"></i>
                             [[${order.recipientAddress}]]
                         </div>
-                        <div>
+                        <div class="my-2">
                             <i class="fas fa-phone-alt"></i>
                             [[${order.phoneNumber}]]
                         </div>
@@ -102,7 +102,7 @@
     let csrfValue = "[[${_csrf.token}]]";
 
     $(document).ready(function () {
-        $("[name='keyword']").attr("placeholder", "Type #number to search by Order ID");
+        $("[name='keyWord']").attr("placeholder", "Type #number to search by Order ID");
         handleLinkViewOrderDetails();
     });
 

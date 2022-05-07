@@ -5,6 +5,7 @@ import com.densoft.shopmecommon.entity.Address;
 import com.densoft.shopmecommon.entity.Customer;
 import com.densoft.shopmecommon.entity.IdBasedEntity;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ import java.util.*;
 @Table(name = "orders")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Order extends AbstractAddress {
 
     @Column(nullable = false, length = 45)
@@ -50,6 +52,15 @@ public class Order extends AbstractAddress {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("updatedTime ASC")
     private List<OrderTrack> orderTracks = new ArrayList<>();
+
+
+    public Order(Integer id, Date orderTime, float productCost, float subTotal, float total) {
+        this.id = id;
+        this.orderTime = orderTime;
+        this.productCost = productCost;
+        this.subTotal = subTotal;
+        this.total = total;
+    }
 
     public void copyAddressFromCustomer() {
         setFirstName(customer.getFirstName());
