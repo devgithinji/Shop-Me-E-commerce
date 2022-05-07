@@ -1,5 +1,6 @@
 package com.densoft.shopmeAdmin.user.controller;
 
+import com.densoft.shopmeAdmin.AmazonS3Util;
 import com.densoft.shopmeAdmin.paging.PagingAndSortingHelper;
 import com.densoft.shopmeAdmin.paging.PagingAndSortingParam;
 import com.densoft.shopmeAdmin.user.exception.UserNotFoundException;
@@ -66,8 +67,8 @@ public class UserController {
             user.setPhotos(fileName);
             User savedUser = userService.save(user);
             String uploadDir = "user-photos/" + savedUser.getId();
-            FileUpload.cleanDir(uploadDir);
-            FileUpload.saveFile(uploadDir, fileName, multipartFile);
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
         } else {
             if (user.getPhotos().isEmpty()) user.setPhotos(null);
             userService.save(user);
@@ -104,6 +105,9 @@ public class UserController {
     public String deleteUser(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
         try {
             userService.delete(id);
+            //remove user photo
+            String userPhotosDir = "user-photos/" + id;
+            AmazonS3Util.removeFolder(userPhotosDir);
             redirectAttributes.addFlashAttribute("message", "The user ID " + id + " has been deleted successfully");
         } catch (UserNotFoundException e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());

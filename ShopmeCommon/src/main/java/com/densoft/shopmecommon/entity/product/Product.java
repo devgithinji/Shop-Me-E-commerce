@@ -1,5 +1,6 @@
 package com.densoft.shopmecommon.entity.product;
 
+import com.densoft.shopmecommon.Constants;
 import com.densoft.shopmecommon.entity.Brand;
 import com.densoft.shopmecommon.entity.Category;
 import com.densoft.shopmecommon.entity.IdBasedEntity;
@@ -84,9 +85,11 @@ public class Product extends IdBasedEntity {
     private float averageRating;
 
 
-    @Transient private boolean customerCanReview;
+    @Transient
+    private boolean customerCanReview;
 
-    @Transient private boolean reviewedByCustomer;
+    @Transient
+    private boolean reviewedByCustomer;
 
     public Product(Integer id) {
         this.id = id;
@@ -108,7 +111,7 @@ public class Product extends IdBasedEntity {
     @Transient
     public String getMainImagePath() {
         if (id == null || mainImage == null) return "/images/image-thumbnail.png";
-        return "/product-images/" + this.id + "/" + this.mainImage;
+        return Constants.S3_BASE_URI + "/product-images/" + this.id + "/" + this.mainImage;
     }
 
     public boolean containsImageName(String fileName) {

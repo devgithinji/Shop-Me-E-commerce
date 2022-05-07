@@ -1,5 +1,6 @@
 package com.densoft.shopmefrontend.setting;
 
+import com.densoft.shopmecommon.Constants;
 import com.densoft.shopmecommon.entity.setting.Setting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,7 @@ public class SettingFilter implements Filter {
         settingList.forEach(setting -> {
             servletRequest.setAttribute(setting.getKey(), setting.getValue());
         });
+        servletRequest.setAttribute("S3_BASE_URI", Constants.S3_BASE_URI);
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }
