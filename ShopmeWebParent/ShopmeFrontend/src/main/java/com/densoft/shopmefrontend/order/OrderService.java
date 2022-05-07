@@ -52,6 +52,25 @@ public class OrderService {
             order.copyShippingAddress(address);
         }
 
+        setOrderDetails(cartItemList, order);
+
+        OrderTrack track = getOrderTrack(order);
+
+        order.getOrderTracks().add(track);
+
+        return orderRepository.save(order);
+    }
+
+    private OrderTrack getOrderTrack(Order order) {
+        OrderTrack track = new OrderTrack();
+        track.setOrder(order);
+        track.setStatus(OrderStatus.NEW);
+        track.setNotes(OrderStatus.NEW.defaultDescription());
+        track.setUpdatedTime(new Date());
+        return track;
+    }
+
+    private void setOrderDetails(List<CartItem> cartItemList, Order order) {
         Set<OrderDetail> orderDetails = order.getOrderDetails();
 
         for (CartItem cartItem : cartItemList) {
@@ -66,17 +85,6 @@ public class OrderService {
             orderDetail.setShippingCost(cartItem.getShippingCost());
             orderDetails.add(orderDetail);
         }
-
-
-        OrderTrack track = new OrderTrack();
-        track.setOrder(order);
-        track.setStatus(OrderStatus.NEW);
-        track.setNotes(OrderStatus.NEW.defaultDescription());
-        track.setUpdatedTime(new Date());
-
-        order.getOrderTracks().add(track);
-
-        return orderRepository.save(order);
     }
 
     public Page<Order> listForCustomerByPage(Customer customer, int pageNUm, String sortField, String sortDir, String keyword) {
@@ -89,5 +97,9 @@ public class OrderService {
         }
 
         return orderRepository.findAll(customer.getId(), pageable);
+    }
+
+    public Order getOrder(Integer id, Customer customer) {
+        return orderRepository.findByIdAndCustomer(id, customer);
     }
 }
