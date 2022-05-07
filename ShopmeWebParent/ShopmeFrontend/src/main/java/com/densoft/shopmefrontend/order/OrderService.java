@@ -7,6 +7,10 @@ import com.densoft.shopmecommon.entity.order.*;
 import com.densoft.shopmecommon.entity.product.Product;
 import com.densoft.shopmefrontend.checkout.CheckOutInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -15,6 +19,8 @@ import java.util.Set;
 
 @Service
 public class OrderService {
+
+    public static final int ORDERS_PER_PAGE = 5;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -71,5 +77,17 @@ public class OrderService {
         order.getOrderTracks().add(track);
 
         return orderRepository.save(order);
+    }
+
+    public Page<Order> listForCustomerByPage(Customer customer, int pageNUm, String sortField, String sortDir, String keyword) {
+        Sort sort = Sort.by(sortField);
+        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+        Pageable pageable = PageRequest.of(pageNUm - 1, ORDERS_PER_PAGE, sort);
+
+        if (keyword != null) {
+            return orderRepository.findAll(keyword, customer.getId(), pageable);
+        }
+
+        return orderRepository.findAll(customer.getId(), pageable);
     }
 }
