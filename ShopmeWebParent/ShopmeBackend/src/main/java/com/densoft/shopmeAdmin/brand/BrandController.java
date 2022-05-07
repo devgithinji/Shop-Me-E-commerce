@@ -1,5 +1,6 @@
 package com.densoft.shopmeAdmin.brand;
 
+import com.densoft.shopmeAdmin.AmazonS3Util;
 import com.densoft.shopmeAdmin.category.CategoryService;
 import com.densoft.shopmeAdmin.paging.PagingAndSortingHelper;
 import com.densoft.shopmeAdmin.paging.PagingAndSortingParam;
@@ -64,9 +65,9 @@ public class BrandController {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             brand.setLogo(fileName);
             Brand savedBrand = brandService.save(brand);
-            String uploadDir = "../brand-logos/" + savedBrand.getId();
-            FileUpload.cleanDir(uploadDir);
-            FileUpload.saveFile(uploadDir, fileName, multipartFile);
+            String uploadDir = "brand-logos/" + savedBrand.getId();
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
         } else {
             brandService.save(brand);
         }
@@ -99,8 +100,8 @@ public class BrandController {
     public String deleteBrand(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
         try {
             brandService.delete(id);
-            String brandDir = "../brand-logos/" + id;
-            FileUpload.removeDir(brandDir);
+            String brandDir = "brand-logos/" + id;
+            AmazonS3Util.removeFolder(brandDir);
             redirectAttributes.addFlashAttribute("message", "The brand ID " + id + " has been deleted successfully");
         } catch (BrandNotFoundException brandNotFoundException) {
             redirectAttributes.addFlashAttribute("message", brandNotFoundException.getMessage());

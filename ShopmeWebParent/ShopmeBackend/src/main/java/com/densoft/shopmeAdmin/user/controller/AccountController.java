@@ -1,5 +1,6 @@
 package com.densoft.shopmeAdmin.user.controller;
 
+import com.densoft.shopmeAdmin.AmazonS3Util;
 import com.densoft.shopmeAdmin.security.CustomUserDetails;
 import com.densoft.shopmeAdmin.user.exception.UserNotFoundException;
 import com.densoft.shopmeAdmin.user.UserService;
@@ -40,8 +41,8 @@ public class AccountController {
             user.setPhotos(fileName);
             User savedUser = userService.updateAccount(user);
             String uploadDir = "user-photos/" + savedUser.getId();
-            FileUpload.cleanDir(uploadDir);
-            FileUpload.saveFile(uploadDir, fileName, multipartFile);
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
         } else {
             if (user.getPhotos().isEmpty()) user.setPhotos(null);
             userService.updateAccount(user);

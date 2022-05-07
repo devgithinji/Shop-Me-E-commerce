@@ -1,5 +1,6 @@
 package com.densoft.shopmeAdmin.setting;
 
+import com.densoft.shopmeAdmin.AmazonS3Util;
 import com.densoft.shopmeAdmin.currency.CurrencyRepository;
 import com.densoft.shopmeAdmin.util.FileUpload;
 import com.densoft.shopmecommon.Constants;
@@ -65,9 +66,10 @@ public class SettingController {
             String value = "/site-logo/" + fileName;
             generalSettingBag.updateSiteLogo(value);
 
-            String uploadDir = "../site-logo/";
-            FileUpload.cleanDir(uploadDir);
-            FileUpload.saveFile(uploadDir, fileName, multipartFile);
+            String uploadDir = "site-logo/";
+
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
         }
     }
 

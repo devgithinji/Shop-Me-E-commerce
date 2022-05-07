@@ -1,5 +1,6 @@
 package com.densoft.shopmeAdmin.category;
 
+import com.densoft.shopmeAdmin.AmazonS3Util;
 import com.densoft.shopmeAdmin.category.exporter.CategoryCSVExporter;
 import com.densoft.shopmeAdmin.util.FileUpload;
 import com.densoft.shopmecommon.entity.Category;
@@ -77,9 +78,9 @@ public class CategoryController {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             category.setImage(fileName);
             Category savedCategory = categoryService.save(category);
-            String uploadDir = "../category-images/" + savedCategory.getId();
-            FileUpload.cleanDir(uploadDir);
-            FileUpload.saveFile(uploadDir, fileName, multipartFile);
+            String uploadDir = "category-images/" + savedCategory.getId();
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
         } else {
             categoryService.save(category);
         }
@@ -122,8 +123,8 @@ public class CategoryController {
     public String deleteCategory(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
         try {
             categoryService.delete(id);
-            String categoryDir = "../category-images/" + id;
-            FileUpload.removeDir(categoryDir);
+            String categoryDir = "category-images/" + id;
+            AmazonS3Util.removeFolder(categoryDir);
             redirectAttributes.addFlashAttribute("message", "The user ID " + id + " has been deleted successfully");
         } catch (CategoryNotFoundException categoryNotFoundException) {
             redirectAttributes.addFlashAttribute("message", categoryNotFoundException.getMessage());
