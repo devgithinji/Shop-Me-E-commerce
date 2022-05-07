@@ -2,6 +2,7 @@ package com.densoft.shopmeAdmin.setting;
 
 import com.densoft.shopmeAdmin.currency.CurrencyRepository;
 import com.densoft.shopmeAdmin.util.FileUpload;
+import com.densoft.shopmecommon.Constants;
 import com.densoft.shopmecommon.entity.Currency;
 import com.densoft.shopmecommon.entity.setting.Setting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class SettingController {
         for (Setting setting : settingList) {
             model.addAttribute(setting.getKey(), setting.getValue());
         }
+
+        model.addAttribute("S3_BASE_URI", Constants.S3_BASE_URI);
 
         return "settings/settings";
     }

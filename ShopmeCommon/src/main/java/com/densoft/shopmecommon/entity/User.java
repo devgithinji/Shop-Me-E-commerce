@@ -1,5 +1,6 @@
 package com.densoft.shopmecommon.entity;
 
+import com.densoft.shopmecommon.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -62,7 +63,7 @@ public class User extends IdBasedEntity {
     @Transient
     public String getPhotosImagePath() {
         if (id == null || photos == null) return "/images/default-user.png";
-        return "/user-photos/" + this.id + "/" + this.photos;
+        return Constants.S3_BASE_URI + "/user-photos/" + this.id + "/" + this.photos;
     }
 
     public boolean hasRole(String roleName) {
