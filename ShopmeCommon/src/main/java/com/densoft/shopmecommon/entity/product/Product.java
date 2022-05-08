@@ -21,9 +21,9 @@ import java.util.*;
 @ToString
 public class Product extends IdBasedEntity {
 
-    @Column(unique = true, length = 256, nullable = false)
+    @Column(unique = true, length = 255, nullable = false)
     private String name;
-    @Column(unique = true, length = 256, nullable = false)
+    @Column(unique = true, length = 255, nullable = false)
     private String alias;
     @Column(length = 512, name = "short_description", nullable = false)
     private String shortDescription;
