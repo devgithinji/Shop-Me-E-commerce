@@ -1,5 +1,6 @@
 package com.densoft.shopmecommon.entity.product;
 
+import com.densoft.shopmecommon.Constants;
 import com.densoft.shopmecommon.entity.IdBasedEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,6 +38,6 @@ public class ProductImage extends IdBasedEntity {
 
     @Transient
     public String getImagePath() {
-        return "/product-images/" + product.getId() + "/extras/" + this.name;
+        return Constants.S3_BASE_URI + "/product-images/" + product.getId() + "/extras/" + this.name;
     }
 }
