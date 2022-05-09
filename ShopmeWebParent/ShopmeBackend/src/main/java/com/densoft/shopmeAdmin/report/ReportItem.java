@@ -7,6 +7,7 @@ public class ReportItem {
     private float grossSales;
     private float netSales;
     private int ordersCount;
+    private int productsCount;
 
     public ReportItem() {
     }
@@ -21,11 +22,12 @@ public class ReportItem {
         this.netSales = netSales;
     }
 
-    public ReportItem(String identifier, float grossSales, float netSales, int ordersCount) {
+    public ReportItem(String identifier, float grossSales, float netSales, int productsCount) {
+        super();
         this.identifier = identifier;
         this.grossSales = grossSales;
         this.netSales = netSales;
-        this.ordersCount = ordersCount;
+        this.productsCount = productsCount;
     }
 
     public String getIdentifier() {
@@ -61,20 +63,25 @@ public class ReportItem {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ReportItem)) return false;
-        ReportItem that = (ReportItem) o;
-        return getIdentifier().equals(that.getIdentifier());
+    public int hashCode() {
+        return Objects.hash(identifier);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(getIdentifier());
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ReportItem other = (ReportItem) obj;
+        return Objects.equals(identifier, other.identifier);
     }
 
     public void addGrossSales(float amount) {
         this.grossSales += amount;
+
     }
 
     public void addNetSales(float amount) {
@@ -83,5 +90,17 @@ public class ReportItem {
 
     public void increaseOrdersCount() {
         this.ordersCount++;
+    }
+
+    public int getProductsCount() {
+        return productsCount;
+    }
+
+    public void setProductsCount(int productsCount) {
+        this.productsCount = productsCount;
+    }
+
+    public void increaseProductsCount(int count) {
+        this.productsCount += count;
     }
 }
